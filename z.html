@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطة علاجية - نموذج تفاعلي</title>
+    
+    <!-- Tailwind CSS -->
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=nJXYaFfBuyhSxAcXAJe3m9rrVSvKgdrAD2Pv2KW80n4o3Upa28fSX0Z3S0LSv78IAf83hCWC0FQIz-MRTlKh43CfhDK6wT09-WOgutC4L31VL1dgAJw90_H6MDHs-0GY" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        moe: {
+                            main: '#5DA598', // درجة اللون الأخضر/المائل للأزرق الخاص بالوزارة
+                            dark: '#4a857a',
+                            light: '#e8f4f2'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* تنسيقات الطباعة */
+        @media print {
+            body {
+                background-color: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-area {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                transform: none !important;
+            }
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+            /* إجبار المتصفح على طباعة الألوان والخلفيات */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* تحسين مظهر التمرير للوحة التحكم */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .lines-bg {
+            background-image: repeating-linear-gradient(to bottom, transparent, transparent 30px, #e5e7eb 30px, #e5e7eb 32px);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // مكوّن الإطار المخصص للمعاينة (المربعات ذات العناوين المتداخلة)
+        const FieldSet = ({ label, children, className = "" }) => (
+            <div className={`relative border-[1.5px] border-moe-main rounded-lg p-3 pt-4 ${className}`}>
+                <span className="absolute -top-3.5 right-4 bg-white px-2 text-moe-main font-bold text-[15px]">
+                    {label}
+                </span>
+                {children}
+            </div>
+        );
+
+        // مكوّن مربع الاختيار للمعاينة
+        const PreviewCheckbox = ({ label, checked }) => (
+            <div className="flex items-center gap-2">
+                <div className={`w-[14px] h-[14px] rounded-[3px] border-[1.5px] border-moe-main flex items-center justify-center transition-colors ${checked ? 'bg-moe-main' : 'bg-white'}`}>
+                    {checked && <i className="fa-solid fa-check text-white text-[9px]"></i>}
+                </div>
+                <span className="text-gray-800 text-[13px] font-semibold">{label}</span>
+            </div>
+        );
+
+        // المكون الرئيسي
+        function App() {
+            // حالة البيانات (State)
+            const [data, setData] = useState({
+                directorateName: 'الإدارة العامة للتعليم\nبمنطقة الشمالية\nمكتب التعليم',
+                schoolName: '',
+                subjectName: '',
+                studentName: '',
+                improvement: '', // 'سريع', 'جيد جداً', 'جيد', 'بطيء'
+                grade: '',
+                semester: '',
+                followUpDate: '',
+                
+                weaknesses: {
+                    participation: false,
+                    achievement: false,
+                    homework: false,
+                    absence: false,
+                    familyCircumstances: false,
+                    familyFollowup: false,
+                    eyesight: false,
+                    hearing: false,
+                    psychological: false,
+                    other1Checked: false,
+                    other1Text: '',
+                    other2Checked: false,
+                    other2Text: '',
+                },
+                
+                methods: {
+                    worksheets: false,
+                    encouragement: false,
+                    groupRole: false,
+                    changeGroup: false,
+                    peerLearning: false,
+                    innovation: false,
+                    diversifyEval: false,
+                    incentives: false,
+                    reinforcementGroups: false,
+                    reinforcement: false,
+                    other1Checked: false,
+                    other1Text: '',
+                    other2Checked: false,
+                    other2Text: '',
+                },
+                
+                actions: {
+                    individualMeeting: false,
+                    counselorMeeting: false,
+                    guardianMeeting: false,
+                    other1Checked: false,
+                    other1Text: '',
+                    other2Checked: false,
+                    other2Text: '',
+                },
+
+                principalName: '',
+                teacherName: ''
+            });
+
+            // دالة التحديث العامة للبيانات النصية
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setData(prev => ({ ...prev, [name]: value }));
+            };
+
+            // دالة التحديث للمجموعات المتداخلة (مثل نقاط الضعف)
+            const handleNestedChange = (group, field, value) => {
+                setData(prev => ({
+                    ...prev,
+                    [group]: {
+                        ...prev[group],
+                        [field]: value
+                    }
+                }));
+            };
+
+            const printDocument = () => {
+                window.print();
+            };
+
+            return (
+                <div className="flex flex-col lg:flex-row min-h-screen">
+                    
+                    {/* لوحة التحكم (الجانب الأيمن) */}
+                    <div className="no-print w-full lg:w-[400px] bg-white border-l border-gray-200 flex flex-col h-screen sticky top-0 shadow-lg z-10">
+                        <div className="p-4 bg-moe-main text-white flex justify-between items-center shadow-md">
+                            <h2 className="text-lg font-bold"><i className="fa-solid fa-sliders ml-2"></i> لوحة التحكم</h2>
+                            <button 
+                                onClick={printDocument}
+                                className="bg-white text-moe-main hover:bg-gray-100 px-4 py-1.5 rounded-md text-sm font-bold shadow-sm transition-all flex items-center gap-2">
+                                <i className="fa-solid fa-print"></i> طباعة النموذج
+                            </button>
+                        </div>
+
+                        <div className="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+                            
+                            {/* القسم الأساسي */}
+                            <div className="space-y-4">
+                                <h3 className="font-bold text-gray-700 border-b pb-2 text-sm">البيانات الأساسية</h3>
+                                
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-1">جهة الإدارة (أعلى اليمين)</label>
+                                    <textarea name="directorateName" value={data.directorateName} onChange={handleChange} rows="3" className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none"></textarea>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-1">اسم المدرسة</label>
+                                    <input type="text" name="schoolName" value={data.schoolName} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" placeholder="مثال: مدرسة الإبداع" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-1">اسم المادة</label>
+                                    <input type="text" name="subjectName" value={data.subjectName} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" placeholder="مثال: الرياضيات" />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="col-span-2">
+                                        <label className="block text-xs font-semibold text-gray-600 mb-1">اسم الطالب/ـة</label>
+                                        <input type="text" name="studentName" value={data.studentName} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-gray-600 mb-1">الصف/الفصل</label>
+                                        <input type="text" name="grade" value={data.grade} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-gray-600 mb-1">الفصل الدراسي</label>
+                                        <input type="text" name="semester" value={data.semester} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-gray-600 mb-1">تاريخ المتابعة</label>
+                                        <input type="text" name="followUpDate" value={data.followUpDate} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-2">نتيجة التحسن</label>
+                                    <div className="flex gap-4 bg-gray-50 p-2 rounded border border-gray-200">
+                                        {['سريع', 'جيد جداً', 'جيد', 'بطيء'].map(opt => (
+                                            <label key={opt} className="flex items-center gap-1 text-sm cursor-pointer">
+                                                <input type="radio" name="improvement" value={opt} checked={data.improvement === opt} onChange={handleChange} className="accent-moe-main" /> {opt}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* نقاط الضعف */}
+                            <div className="space-y-3">
+                                <h3 className="font-bold text-gray-700 border-b pb-2 text-sm">نقاط الضعف</h3>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {[
+                                        { id: 'participation', label: 'قلة المشاركة الصفية' },
+                                        { id: 'achievement', label: 'ضعف المستوى التحصيلي' },
+                                        { id: 'homework', label: 'إهمال الواجبات المنزلية' },
+                                        { id: 'absence', label: 'كثرة الغياب' },
+                                        { id: 'familyCircumstances', label: 'ظروف أسرية' },
+                                        { id: 'familyFollowup', label: 'عدم متابعة الأسرة' },
+                                        { id: 'eyesight', label: 'ضعف حاسة البصر' },
+                                        { id: 'hearing', label: 'ضعف حاسة السمع' },
+                                        { id: 'psychological', label: 'عوامل نفسية وبيولوجية' },
+                                    ].map(item => (
+                                        <label key={item.id} className="flex items-center gap-2 text-sm cursor-pointer">
+                                            <input type="checkbox" checked={data.weaknesses[item.id]} onChange={(e) => handleNestedChange('weaknesses', item.id, e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                            <span className="text-gray-700 text-xs">{item.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                {/* إضافات مخصصة لنقاط الضعف */}
+                                <div className="space-y-2 mt-2">
+                                    <div className="flex items-center gap-2">
+                                        <input type="checkbox" checked={data.weaknesses.other1Checked} onChange={(e) => handleNestedChange('weaknesses', 'other1Checked', e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                        <input type="text" placeholder="سبب آخر..." value={data.weaknesses.other1Text} onChange={(e) => handleNestedChange('weaknesses', 'other1Text', e.target.value)} className="flex-1 border-b border-gray-300 p-1 text-xs outline-none focus:border-moe-main bg-transparent" />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input type="checkbox" checked={data.weaknesses.other2Checked} onChange={(e) => handleNestedChange('weaknesses', 'other2Checked', e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                        <input type="text" placeholder="سبب آخر..." value={data.weaknesses.other2Text} onChange={(e) => handleNestedChange('weaknesses', 'other2Text', e.target.value)} className="flex-1 border-b border-gray-300 p-1 text-xs outline-none focus:border-moe-main bg-transparent" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* الطرق العلاجية */}
+                            <div className="space-y-3">
+                                <h3 className="font-bold text-gray-700 border-b pb-2 text-sm">الطرق العلاجية</h3>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {[
+                                        { id: 'worksheets', label: 'أوراق عمل إضافية' },
+                                        { id: 'encouragement', label: 'التشجيع على المشاركة' },
+                                        { id: 'groupRole', label: 'إسناد دور في مجموعة' },
+                                        { id: 'changeGroup', label: 'تغيير مجموعة الطالب/ـة' },
+                                        { id: 'peerLearning', label: 'التعلم بالأقران' },
+                                        { id: 'innovation', label: 'الابتكار والتجديد' },
+                                        { id: 'diversifyEval', label: 'تنويع أساليب التقويم' },
+                                        { id: 'incentives', label: 'تقديم حوافز متنوعة' },
+                                        { id: 'reinforcementGroups', label: 'الإشراك في مجاميع التقوية' },
+                                        { id: 'reinforcement', label: 'استخدام التعزيز' },
+                                    ].map(item => (
+                                        <label key={item.id} className="flex items-center gap-2 text-sm cursor-pointer">
+                                            <input type="checkbox" checked={data.methods[item.id]} onChange={(e) => handleNestedChange('methods', item.id, e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                            <span className="text-gray-700 text-xs">{item.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <input type="checkbox" checked={data.methods.other1Checked} onChange={(e) => handleNestedChange('methods', 'other1Checked', e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                    <input type="text" placeholder="طريقة أخرى..." value={data.methods.other1Text} onChange={(e) => handleNestedChange('methods', 'other1Text', e.target.value)} className="flex-1 border-b border-gray-300 p-1 text-xs outline-none focus:border-moe-main bg-transparent" />
+                                </div>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <input type="checkbox" checked={data.methods.other2Checked} onChange={(e) => handleNestedChange('methods', 'other2Checked', e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                    <input type="text" placeholder="طريقة أخرى..." value={data.methods.other2Text} onChange={(e) => handleNestedChange('methods', 'other2Text', e.target.value)} className="flex-1 border-b border-gray-300 p-1 text-xs outline-none focus:border-moe-main bg-transparent" />
+                                </div>
+                            </div>
+
+                            {/* الإجراءات المتخذة */}
+                            <div className="space-y-3">
+                                <h3 className="font-bold text-gray-700 border-b pb-2 text-sm">الإجراءات المتخذة</h3>
+                                <div className="flex flex-col gap-2">
+                                    {[
+                                        { id: 'individualMeeting', label: 'لقاء فردي' },
+                                        { id: 'counselorMeeting', label: 'لقاء مع المرشد/ة الطلابي/ـية' },
+                                        { id: 'guardianMeeting', label: 'لقاء أو تواصل مع ولي الأمر' },
+                                    ].map(item => (
+                                        <label key={item.id} className="flex items-center gap-2 text-sm cursor-pointer">
+                                            <input type="checkbox" checked={data.actions[item.id]} onChange={(e) => handleNestedChange('actions', item.id, e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                            <span className="text-gray-700 text-xs">{item.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                <div className="space-y-2 mt-2">
+                                    <div className="flex items-center gap-2">
+                                        <input type="checkbox" checked={data.actions.other1Checked} onChange={(e) => handleNestedChange('actions', 'other1Checked', e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                        <input type="text" placeholder="إجراء آخر..." value={data.actions.other1Text} onChange={(e) => handleNestedChange('actions', 'other1Text', e.target.value)} className="flex-1 border-b border-gray-300 p-1 text-xs outline-none focus:border-moe-main bg-transparent" />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input type="checkbox" checked={data.actions.other2Checked} onChange={(e) => handleNestedChange('actions', 'other2Checked', e.target.checked)} className="accent-moe-main w-4 h-4 rounded" />
+                                        <input type="text" placeholder="إجراء آخر..." value={data.actions.other2Text} onChange={(e) => handleNestedChange('actions', 'other2Text', e.target.value)} className="flex-1 border-b border-gray-300 p-1 text-xs outline-none focus:border-moe-main bg-transparent" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* التوقيعات */}
+                            <div className="space-y-4 pb-8">
+                                <h3 className="font-bold text-gray-700 border-b pb-2 text-sm">التوقيعات</h3>
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-1">اسم المعلم/ـة</label>
+                                    <input type="text" name="teacherName" value={data.teacherName} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-1">مدير/ة المدرسة</label>
+                                    <input type="text" name="principalName" value={data.principalName} onChange={handleChange} className="w-full border border-gray-300 rounded p-2 text-sm focus:border-moe-main outline-none" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* منطقة المعاينة (A4) */}
+                    <div className="flex-1 overflow-auto bg-gray-200 flex justify-center py-10 print-area custom-scrollbar">
+                        
+                        <div className="bg-white w-[210mm] min-h-[297mm] shadow-2xl p-8 relative print-area print:shadow-none print:p-0 text-gray-800">
+                            
+                            {/* الترويسة العليا */}
+                            <div className="flex justify-between items-start mb-4">
+                                {/* النص الإداري (أعلى اليمين وتوسيط داخلي) */}
+                                <div className="text-center text-sm font-bold leading-relaxed w-[200px] whitespace-pre-line text-gray-800 pt-2">
+                                    {data.directorateName}
+                                </div>
+
+                                {/* شعار الوزارة الحقيقي (المنتصف) */}
+                                <div className="w-[200px] flex justify-center">
+                                    <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار وزارة التعليم" className="max-h-20 object-contain" />
+                                </div>
+
+                                {/* مساحة فارغة في اليسار للتوازن */}
+                                <div className="w-[200px]"></div>
+                            </div>
+
+                            {/* اسم المدرسة والمادة */}
+                            <div className="relative mb-6 mt-2">
+                                {/* الخطوط الخلفية */}
+                                <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 flex flex-col gap-1">
+                                    <div className="h-[1.5px] bg-gray-300 w-full"></div>
+                                    <div className="h-[1.5px] bg-gray-300 w-full"></div>
+                                </div>
+                                
+                                <div className="flex flex-col items-center relative z-10">
+                                    <div className="bg-white px-8 py-2 border-[1.5px] border-moe-main rounded-md text-xl font-bold min-w-[250px] text-center shadow-sm">
+                                        {data.schoolName || "اسم المدرسة"}
+                                    </div>
+                                    <div className="bg-white px-4 pt-4 pb-1 text-lg font-bold text-gray-700">
+                                        خطة علاجية - {data.subjectName || "اسم المادة"}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* القسم الأول: معلومات الطالب */}
+                            <div className="space-y-4 mb-8">
+                                <div className="flex gap-4">
+                                    <FieldSet label="اسم الطالب/ـة:" className="flex-1 flex items-center">
+                                        <span className="text-center w-full font-bold">{data.studentName}</span>
+                                    </FieldSet>
+                                    
+                                    <FieldSet label="نتيجة التحسن:" className="flex-1">
+                                        <div className="flex justify-between items-center h-full px-2">
+                                            {['سريع', 'جيد جداً', 'جيد', 'بطيء'].map(opt => (
+                                                <PreviewCheckbox key={opt} label={opt} checked={data.improvement === opt} />
+                                            ))}
+                                        </div>
+                                    </FieldSet>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <FieldSet label="الصف/الفصل:" className="flex-[1.5] flex items-center justify-center">
+                                        <span className="font-bold">{data.grade}</span>
+                                    </FieldSet>
+                                    
+                                    <FieldSet label="الفصل الدراسي:" className="flex-1 flex items-center justify-center">
+                                        <span className="font-bold">{data.semester}</span>
+                                    </FieldSet>
+
+                                    <FieldSet label="تاريخ المتابعة:" className="flex-1 flex items-center justify-center">
+                                        <span className="font-bold">{data.followUpDate}</span>
+                                    </FieldSet>
+                                </div>
+                            </div>
+
+                            {/* خط فاصل رمادي خفيف */}
+                            <div className="h-[1.5px] bg-gray-200 w-full mb-6"></div>
+
+                            {/* نقاط الضعف */}
+                            <FieldSet label="نقاط الضعف:" className="mb-6">
+                                <div className="flex flex-wrap gap-y-4 gap-x-8 px-2 py-1">
+                                    <PreviewCheckbox label="قلة المشاركة الصفية." checked={data.weaknesses.participation} />
+                                    <PreviewCheckbox label="ضعف المستوى التحصيلي." checked={data.weaknesses.achievement} />
+                                    <PreviewCheckbox label="إهمال الواجبات المنزلية." checked={data.weaknesses.homework} />
+                                    
+                                    <PreviewCheckbox label="كثرة الغياب." checked={data.weaknesses.absence} />
+                                    <PreviewCheckbox label="ظروف أسرية." checked={data.weaknesses.familyCircumstances} />
+                                    <PreviewCheckbox label="عدم متابعة الأسرة." checked={data.weaknesses.familyFollowup} />
+                                    <PreviewCheckbox label="ضعف حاسة البصر." checked={data.weaknesses.eyesight} />
+                                    
+                                    <PreviewCheckbox label="ضعف حاسة السمع." checked={data.weaknesses.hearing} />
+                                    <PreviewCheckbox label="عوامل نفسية وبيولوجية." checked={data.weaknesses.psychological} />
+                                    
+                                    <div className="w-full flex gap-8 mt-2">
+                                        <div className="flex flex-1 items-end gap-2">
+                                            <PreviewCheckbox label="" checked={data.weaknesses.other1Checked} />
+                                            <div className="flex-1 border-b border-gray-400 min-h-[24px] text-sm pb-1 font-bold">{data.weaknesses.other1Text}</div>
+                                        </div>
+                                        <div className="flex flex-1 items-end gap-2">
+                                            <PreviewCheckbox label="" checked={data.weaknesses.other2Checked} />
+                                            <div className="flex-1 border-b border-gray-400 min-h-[24px] text-sm pb-1 font-bold">{data.weaknesses.other2Text}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </FieldSet>
+
+                            {/* الطرق العلاجية */}
+                            <FieldSet label="الطرق العلاجية:" className="mb-6">
+                                <div className="flex flex-wrap gap-y-4 gap-x-6 px-2 py-1">
+                                    <PreviewCheckbox label="أوراق عمل إضافية." checked={data.methods.worksheets} />
+                                    <PreviewCheckbox label="التشجيع على المشاركة." checked={data.methods.encouragement} />
+                                    <PreviewCheckbox label="إسناد دور للطالب/ـة في مجموعة." checked={data.methods.groupRole} />
+                                    
+                                    <PreviewCheckbox label="تغيير مجموعة للطالب/ـة." checked={data.methods.changeGroup} />
+                                    <PreviewCheckbox label="التعلم بالأقران." checked={data.methods.peerLearning} />
+                                    <PreviewCheckbox label="الابتكار والتجديد في طرق التدريس." checked={data.methods.innovation} />
+                                    
+                                    <PreviewCheckbox label="تنويع الأسئلة وأساليب التقويم." checked={data.methods.diversifyEval} />
+                                    <PreviewCheckbox label="تقديم حوافز متنوعة." checked={data.methods.incentives} />
+                                    <PreviewCheckbox label="الإشراك في مجاميع التقوية." checked={data.methods.reinforcementGroups} />
+                                    
+                                    <PreviewCheckbox label="استخدام التعزيز." checked={data.methods.reinforcement} />
+                                    <div className="flex flex-1 items-end gap-2 min-w-[200px]">
+                                        <PreviewCheckbox label="" checked={data.methods.other1Checked} />
+                                        <div className="flex-1 border-b border-gray-400 min-h-[24px] text-sm pb-1 font-bold">{data.methods.other1Text}</div>
+                                    </div>
+                                </div>
+                                <div className="flex px-2 mt-4 items-end gap-2">
+                                    <PreviewCheckbox label="" checked={data.methods.other2Checked} />
+                                    <div className="flex-1 border-b border-gray-400 min-h-[24px] text-sm pb-1 font-bold">{data.methods.other2Text}</div>
+                                </div>
+                            </FieldSet>
+
+                            {/* الإجراءات المتخذة */}
+                            <FieldSet label="الإجراءات المتخذة:" className="mb-8 relative pb-6">
+                                <div className="absolute right-4 bottom-2 text-gray-200 text-opacity-30 text-5xl font-bold select-none z-0">
+                                    {/* علامة مائية باهتة إن وجدت أو تركها فارغة */}
+                                </div>
+                                <div className="flex flex-wrap gap-y-4 gap-x-8 px-2 py-1 relative z-10">
+                                    <PreviewCheckbox label="لقاء فردي." checked={data.actions.individualMeeting} />
+                                    <PreviewCheckbox label="لقاء مع المرشد/ة الطلابي/ـية." checked={data.actions.counselorMeeting} />
+                                    <PreviewCheckbox label="لقاء أو تواصل مع ولي الأمر." checked={data.actions.guardianMeeting} />
+                                </div>
+                                <div className="flex flex-col gap-4 px-2 mt-4 relative z-10">
+                                    <div className="flex items-end gap-2">
+                                        <PreviewCheckbox label="" checked={data.actions.other1Checked} />
+                                        <div className="flex-1 border-b border-gray-400 min-h-[24px] text-sm pb-1 font-bold">{data.actions.other1Text}</div>
+                                    </div>
+                                    <div className="flex items-end gap-2">
+                                        <PreviewCheckbox label="" checked={data.actions.other2Checked} />
+                                        <div className="flex-1 border-b border-gray-400 min-h-[24px] text-sm pb-1 font-bold">{data.actions.other2Text}</div>
+                                    </div>
+                                </div>
+                            </FieldSet>
+
+                            {/* خط فاصل رمادي خفيف */}
+                            <div className="h-[1.5px] bg-gray-200 w-full mb-8"></div>
+
+                            {/* التوقيعات */}
+                            <div className="flex justify-between px-16 text-center text-gray-800">
+                                <div>
+                                    <div className="font-bold mb-2">اسم المعلم</div>
+                                    <div className="font-bold">{data.teacherName}</div>
+                                </div>
+                                <div>
+                                    <div className="font-bold mb-2">مدير المدرسة</div>
+                                    <div className="font-bold">{data.principalName}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
