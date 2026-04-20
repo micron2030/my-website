@@ -308,18 +308,16 @@
     }
 
     /* ============================================================
-       تعديلات الطباعة لضمان الوضوح التام واللون الأسود الصريح
+       تعديلات الطباعة لضمان وضوح النصوص فقط باللون الأسود
        ============================================================ */
     @media print {
         body { 
             background: white !important; 
             padding: 0 !important; 
             display: block !important; 
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
         }
         
-        /* إجبار كافة النصوص على اللون الأسود الصريح لضمان الوضوح */
+        /* إجبار كافة النصوص على اللون الأسود الصريح لضمان عدم ظهور اللون الرمادي */
         * {
             color: #000 !important; 
             text-shadow: none !important;
@@ -337,27 +335,20 @@
 
         .moe-header-container { 
             margin: 10mm 15mm 5mm 15mm !important; 
-            border: 2px solid #000 !important;
+            border: 1px solid #000 !important;
         }
 
-        /* زيادة سماكة الحدود في الطباعة لتظهر بوضوح */
+        /* الحدود في الطباعة - جعلها واضحة دون مبالغة في السماكة */
         table, th, td, .tables-frame, .signatures, .id-box, .check-box {
             border-color: #000 !important;
-            border-width: 1.5pt !important;
+            border-width: 0.75pt !important; /* حدود رقيقة ولكن واضحة وسوداء */
         }
-
-        /* منع المتصفح من تصغير الخط تلقائياً */
-        h2 { font-size: 18pt !important; }
-        .info-table th, .info-table td, #evalTable th, #evalTable td, #summaryTable th, #summaryTable td {
-            font-size: 11pt !important;
-        }
-        #summary_avg, #summary_percent { font-size: 16pt !important; }
 
         .buttons, #toast, .result { display: none !important; }
         
         .signatures { 
             background: #fff !important; 
-            border: 2px solid #000 !important;
+            border: 1px solid #000 !important;
         }
 
         select {
@@ -374,7 +365,7 @@
 
         .clean-input::placeholder { color: transparent !important; }
         
-        /* إخفاء التظليل الأحمر للمنسيات عند الطباعة */
+        /* إلغاء التظليل الأحمر للمنسيات عند الطباعة ليبقى النص أسود على خلفية بيضاء */
         #evalTable tr.missed-row { background-color: transparent !important; }
     }
 </style>
@@ -700,7 +691,7 @@
 
         for(let i=1; i<=5; i++) {
             document.getElementById("cb_"+i).innerText = "";
-            document.getElementById("scale_"+i).style.color = "#000"; /* أسود للطباعة */
+            document.getElementById("scale_"+i).style.color = "#000"; 
             document.getElementById("scale_"+i).style.fontWeight = "bold";
         }
         document.getElementById("cb_"+activeScale).innerText = "✔";
