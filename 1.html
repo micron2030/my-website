@@ -253,12 +253,29 @@
         font-weight: 700; 
     }
 
+    /* تنسيق خاص لجدول التقدير لضمان التساوي والوضوح */
+    .grade-table th {
+        background: #f4f4f4;
+        color: #333;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: center;
+        width: 15%;
+    }
+    .grade-table td {
+        font-size: 12px;
+        font-weight: 700;
+        text-align: center;
+        width: 17%;
+    }
+
     .summary-badge {
         border: 1px solid #ccc; 
         padding: 5px 20px; 
         border-radius: 6px; 
         background: #f8f9fa;
         font-size: 14px; 
+        font-weight: 400; /* الحجم المطلوب كما ذكرت */
     }
     
     #summary_avg, #summary_percent {
@@ -302,6 +319,7 @@
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23103b51' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
         }
         #evalTable tr.missed-row { background-color: transparent !important; }
+        .summary-badge { -webkit-print-color-adjust: exact; }
     }
 </style>
 </head>
@@ -445,8 +463,8 @@
                 </tbody>
             </table>
 
-            <!-- خلاصة التقييم -->
-            <table id="summaryTable" style="margin-bottom: 0;">
+            <!-- خلاصة التقييم (جزء الدرجات والمجموع) -->
+            <table id="summaryTable">
                 <tr>
                     <th style="width: 20%;">رقم العنصر</th>
                     <script>for(let i=1;i<=11;i++) document.write(`<th>${i}</th>`);</script>
@@ -470,13 +488,17 @@
                         </div>
                     </td>
                 </tr>
+            </table>
+
+            <!-- جدول التقدير العام المستقل (للتساوي والوضوح) -->
+            <table class="grade-table" style="table-layout: fixed; margin-bottom: 0;">
                 <tr>
-                    <td style="background:#f4f4f4; font-weight:bold;">التقدير</td>
-                    <td colspan="3" id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز</td>
-                    <td colspan="3" id="scale_4"><span class="check-box" id="cb_4"></span> ج جداً</td>
-                    <td colspan="2" id="scale_3"><span class="check-box" id="cb_3"></span> جيد</td>
-                    <td colspan="2" id="scale_2"><span class="check-box" id="cb_2"></span> مقبول</td>
-                    <td colspan="2" id="scale_1"><span class="check-box" id="cb_1"></span> غ مرضي</td>
+                    <th>التقدير العام</th>
+                    <td id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز</td>
+                    <td id="scale_4"><span class="check-box" id="cb_4"></span> جيد جداً</td>
+                    <td id="scale_3"><span class="check-box" id="cb_3"></span> جيد</td>
+                    <td id="scale_2"><span class="check-box" id="cb_2"></span> مقبول</td>
+                    <td id="scale_1"><span class="check-box" id="cb_1"></span> غير مرضي</td>
                 </tr>
             </table>
         </div>
@@ -527,12 +549,14 @@
             month: '2-digit',
             year: 'numeric'
         });
-        // إزالة أي تكرار لـ هـ وتحويل الشهور لـ أرقام
+        
         let hijriFull = hijriFormatter.format(today).replace(/هـ/g, '').trim();
         document.getElementById('header_date_span').innerText = hijriFull + " هـ";
 
-        // 2. استخراج السنة الهجرية لتعيين العام الدراسي
-        const currentHijriYear = parseInt(hijriFull.split('/').pop());
+        // 2. استخراج السنة الهجرية لتعيين العام الدراسي افتراضياً
+        // نستخدم RegExp لضمان الحصول على السنة المكونة من 4 أرقام
+        const match = hijriFull.match(/\d{4}/);
+        const currentHijriYear = match ? parseInt(match[0]) : 1447;
         
         // 3. تعبئة قائمة العام الدراسي واختيار السنة الحالية آلياً
         const yearSelect = document.getElementById('academic_year_select');
@@ -560,13 +584,12 @@
     }
 
     function calc(idx) {
-        // التحقق من العناصر المفقودة وتظليلها باللون الأحمر
         let firstMissed = -1;
         for (let j = 0; j < items.length; j++) {
             let radio = document.querySelector(`input[name="q${j}"]:checked`);
             let row = document.getElementById(`row_${j}`);
             if (!radio) {
-                if (j < idx) { // إذا اختار عنصر حالي ونسي ما قبله
+                if (j < idx) { 
                     row.classList.add("missed-row");
                     if (firstMissed === -1) firstMissed = j;
                 }
@@ -623,11 +646,10 @@
         for(let i=1; i<=5; i++) {
             document.getElementById("cb_"+i).innerText = "";
             document.getElementById("scale_"+i).style.color = "#333";
-            document.getElementById("scale_"+i).style.fontWeight = "normal";
+            document.getElementById("scale_"+i).style.fontWeight = "bold";
         }
         document.getElementById("cb_"+activeScale).innerText = "✔";
         document.getElementById("scale_"+activeScale).style.color = color;
-        document.getElementById("scale_"+activeScale).style.fontWeight = "bold";
     }
 </script>
 
