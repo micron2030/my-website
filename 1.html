@@ -12,12 +12,27 @@
         margin: 10mm; /* هوامش ضيقة للطباعة */
     }
 
+    /* خلفية المتصفح (للشاشات) */
     body {
         font-family: Tahoma, Arial, sans-serif;
-        background: #eef2f7;
-        padding: 5px;
+        background: #525659; /* لون خلفية غامق قليلاً يبرز الورقة */
+        margin: 0;
+        padding: 20px 0;
+        display: flex;
+        justify-content: center; /* توسيط الورقة في منتصف الشاشة */
+    }
+
+    /* ورقة الـ A4 الافتراضية على الشاشة */
+    .a4-wrapper {
+        background: white;
+        width: 210mm; /* عرض الـ A4 القياسي */
+        min-height: 297mm; /* طول الـ A4 القياسي */
+        padding: 10mm; /* الهوامش الداخلية للورقة */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* ظل يعطي إيحاء الورقة الحقيقية */
+        box-sizing: border-box;
         font-size: 13px; /* تصغير الخط العام */
         color: #333;
+        max-width: 100%; /* ليتجاوب مع الشاشات الصغيرة لو لزم الأمر */
     }
 
     /* كليشة الوزارة */
@@ -240,7 +255,14 @@
 
     /* تنسيق الطباعة النهائي */
     @media print {
-        body { background: white; padding: 0; }
+        body { background: white; padding: 0; display: block; }
+        .a4-wrapper { 
+            width: 100%; 
+            min-height: auto; 
+            padding: 0; 
+            box-shadow: none; 
+            max-width: none; 
+        }
         table, .signatures { box-shadow: none; border: none; margin-bottom: 5px; }
         th { background: #e0e0e0 !important; color: black !important; -webkit-print-color-adjust: exact; }
         .buttons, .result, #toast { display: none !important; }
@@ -253,233 +275,237 @@
 
 <body>
 
-<!-- ===================== كليشة الوزارة ===================== -->
-<div class="moe-header">
-    <div class="moe-right" style="text-align: center; min-width: 180px;">
-        <p>المملكة العربية السعودية</p>
-        <p style="margin-right: 25px;">وزارة التعليم</p>
-        <p>"مدرسة العزيزية الثانوية"</p>
+<div class="a4-wrapper">
+
+    <!-- ===================== كليشة الوزارة ===================== -->
+    <div class="moe-header">
+        <div class="moe-right" style="text-align: center; min-width: 180px;">
+            <p>المملكة العربية السعودية</p>
+            <p style="margin-right: 25px;">وزارة التعليم</p>
+            <p>"مدرسة العزيزية الثانوية"</p>
+        </div>
+        
+        <div class="moe-center">
+            <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار وزارة التعليم">
+        </div>
+        
+        <div class="moe-left">
+            <p>الرقم: ..............................</p>
+            <p>التاريخ: <span id="header_date_span"></span></p>
+            <p>المرفقات: ..........................</p>
+        </div>
     </div>
-    
-    <div class="moe-center">
-        <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار وزارة التعليم">
-    </div>
-    
-    <div class="moe-left">
-        <p>الرقم: ..............................</p>
-        <p>التاريخ: <span id="header_date_span"></span></p>
-        <p>المرفقات: ..........................</p>
-    </div>
-</div>
 
-<h2>نموذج تقييم أداء المعلم</h2>
+    <h2>نموذج تقييم أداء المعلم</h2>
 
-<!-- ===================== بيانات التقييم ===================== -->
-<table>
-    <tr>
-        <th style="width: 9%;">رقم التقييم</th>
-        <td style="width: 6%;">
-            <input type="text" maxlength="2" style="width: 100%; text-align: center;" value="0" onblur="if(this.value.trim() === '') this.value = '0';">
-        </td>
-        
-        <th style="width: 10%;">العام الدراسي</th>
-        <td style="width: 12%;">
-            <select>
-                <option value="1440">1440 هـ</option>
-                <option value="1441">1441 هـ</option>
-                <option value="1442">1442 هـ</option>
-                <option value="1443">1443 هـ</option>
-                <option value="1444">1444 هـ</option>
-                <option value="1445" selected>1445 هـ</option>
-                <option value="1446">1446 هـ</option>
-                <option value="1447">1447 هـ</option>
-                <option value="1448">1448 هـ</option>
-                <option value="1449">1449 هـ</option>
-                <option value="1450">1450 هـ</option>
-            </select>
-        </td>
-        
-        <th style="width: 9%;">الفصل الدراسي</th>
-        <td style="width: 14%;">
-            <select>
-                <option value="الأول">الأول</option>
-                <option value="الثاني">الثاني</option>
-            </select>
-        </td>
-        
-        <th style="width: 10%;">فترة التقييم</th>
-        <td style="width: 30%;">
-            <div style="display: flex; align-items: center; gap: 5px;">
-                <span>من</span>
-                <input type="text" placeholder="يوم / شهر / سنة هـ" style="text-align: center; flex: 1;">
-                <span>إلى</span>
-                <input type="text" placeholder="يوم / شهر / سنة هـ" style="text-align: center; flex: 1;">
-            </div>
-        </td>
-    </tr>
-</table>
-
-<!-- ===================== بيانات المعلم ===================== -->
-<table>
-    <tr>
-        <th style="width: 15%;">اسم المعلم رباعياً</th>
-        <td colspan="2" style="width: 35%;"><input type="text"></td>
-        
-        <th style="width: 15%;">السجل المدني</th>
-        <td colspan="2" style="width: 35%;">
-            <div class="id-container">
-                <script>
-                    for(let i=0; i<10; i++){
-                        document.write(`<input class="id-box" type="text" maxlength="1" id="id${i}" oninput="moveNext(this,${i})">`);
-                    }
-                </script>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <th style="width: 15%;">التخصص</th>
-        <td style="width: 18%;"><input type="text"></td>
-        
-        <th style="width: 15%;">مادة التدريس</th>
-        <td style="width: 18%;"><input type="text"></td>
-        
-        <th style="width: 15%;">الأداء السابق</th>
-        <td style="width: 19%;">
-            <input type="text" maxlength="2" style="width: 60px; text-align: center;" placeholder="رقم">
-        </td>
-    </tr>
-</table>
-
-<!-- ===================== التقييم ===================== -->
-<table id="evalTable">
-    <tr>
-        <th style="width: 5%;">م</th>
-        <th style="width: 35%;">عنصر التقييم</th>
-        <th style="width: 10%;">الوزن النسبي</th>
-        <th style="width: 10%;">5</th>
-        <th style="width: 10%;">4</th>
-        <th style="width: 10%;">3</th>
-        <th style="width: 10%;">2</th>
-        <th style="width: 10%;">1</th>
-    </tr>
-
-    <script>
-    const items = [
-        ["أداء الواجبات والمهمات الوظيفية", 10],
-        ["التفاعل المهني المستمر", 10],
-        ["التواصل مع أولياء الأمور", 10],
-        ["استخدام استراتيجيات التدريس الحديثة", 10],
-        ["الجهود المبذولة في تحسين نتائج الطلاب", 10],
-        ["تنفيذ الخطة التعليمية", 10],
-        ["توظيف التقنيات في التعليم", 10],
-        ["تهيئة البيئة الصفية", 5],
-        ["الإدارة الصفية الفاعلة", 5],
-        ["تحليل نتائج الاختبارات وتوظيفها", 10],
-        ["التقويم المستمر للطلاب", 10]
-    ];
-
-    document.write(items.map((item, i) => `
-    <tr>
-        <td>${i+1}</td>
-        <td>${item[0]}</td>
-        <td>${item[1]}%</td>
-        ${[5, 4, 3, 2, 1].map(v => `
-        <td><input type="radio" name="q${i}" value="${v}" onclick="calc(${i})"></td>
-        `).join('')}
-    </tr>
-    `).join(''));
-    </script>
-</table>
-
-<!-- ===================== جدول خلاصة التقييم ===================== -->
-<table id="summaryTable">
-    <tr>
-        <th style="width: 28%;">رقم عنصر التقييم</th>
-        <th style="width: 5%;">1</th>
-        <th style="width: 5%;">2</th>
-        <th style="width: 5%;">3</th>
-        <th style="width: 5%;">4</th>
-        <th style="width: 5%;">5</th>
-        <th style="width: 5%;">6</th>
-        <th style="width: 5%;">7</th>
-        <th style="width: 5%;">8</th>
-        <th style="width: 5%;">9</th>
-        <th style="width: 5%;">10</th>
-        <th style="width: 5%;">11</th>
-        <th style="width: 12%;">المجموع</th>
-    </tr>
-    <tr>
-        <th>تقييم الأداء الوظيفي للعنصر ( 1-5 )</th>
-        <td id="val_0"></td>
-        <td id="val_1"></td>
-        <td id="val_2"></td>
-        <td id="val_3"></td>
-        <td id="val_4"></td>
-        <td id="val_5"></td>
-        <td id="val_6"></td>
-        <td id="val_7"></td>
-        <td id="val_8"></td>
-        <td id="val_9"></td>
-        <td id="val_10"></td>
-        <td id="val_total" style="font-weight:bold; color:#135c34; font-size:14px;"></td>
-    </tr>
-    <tr>
-        <th>التقييم العام للأداء</th>
-        <td colspan="12">
-            <div style="display: flex; justify-content: space-around; align-items: center;">
-                <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
-                    الأداء من 5: <span id="summary_avg" style="font-weight: bold; font-size: 14px;">-</span>
+    <!-- ===================== بيانات التقييم ===================== -->
+    <table>
+        <tr>
+            <th style="width: 9%;">رقم التقييم</th>
+            <td style="width: 6%;">
+                <input type="text" maxlength="2" style="width: 100%; text-align: center;" value="0" onblur="if(this.value.trim() === '') this.value = '0';">
+            </td>
+            
+            <th style="width: 10%;">العام الدراسي</th>
+            <td style="width: 12%;">
+                <select>
+                    <option value="1440">1440 هـ</option>
+                    <option value="1441">1441 هـ</option>
+                    <option value="1442">1442 هـ</option>
+                    <option value="1443">1443 هـ</option>
+                    <option value="1444">1444 هـ</option>
+                    <option value="1445" selected>1445 هـ</option>
+                    <option value="1446">1446 هـ</option>
+                    <option value="1447">1447 هـ</option>
+                    <option value="1448">1448 هـ</option>
+                    <option value="1449">1449 هـ</option>
+                    <option value="1450">1450 هـ</option>
+                </select>
+            </td>
+            
+            <th style="width: 9%;">الفصل الدراسي</th>
+            <td style="width: 14%;">
+                <select>
+                    <option value="الأول">الأول</option>
+                    <option value="الثاني">الثاني</option>
+                </select>
+            </td>
+            
+            <th style="width: 10%;">فترة التقييم</th>
+            <td style="width: 30%;">
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span>من</span>
+                    <input type="text" placeholder="يوم / شهر / سنة هـ" style="text-align: center; flex: 1;">
+                    <span>إلى</span>
+                    <input type="text" placeholder="يوم / شهر / سنة هـ" style="text-align: center; flex: 1;">
                 </div>
-                <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
-                    النسبة %: <span id="summary_percent" style="font-weight: bold; font-size: 14px;">-</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- ===================== بيانات المعلم ===================== -->
+    <table>
+        <tr>
+            <th style="width: 15%;">اسم المعلم رباعياً</th>
+            <td colspan="2" style="width: 35%;"><input type="text"></td>
+            
+            <th style="width: 15%;">السجل المدني</th>
+            <td colspan="2" style="width: 35%;">
+                <div class="id-container">
+                    <script>
+                        for(let i=0; i<10; i++){
+                            document.write(`<input class="id-box" type="text" maxlength="1" id="id${i}" oninput="moveNext(this,${i})">`);
+                        }
+                    </script>
                 </div>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <th>التقدير العام</th>
-        <td colspan="2" id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز (5)</td>
-        <td colspan="3" id="scale_4"><span class="check-box" id="cb_4"></span> جيد جداً (4)</td>
-        <td colspan="2" id="scale_3"><span class="check-box" id="cb_3"></span> جيد (3)</td>
-        <td colspan="3" id="scale_2"><span class="check-box" id="cb_2"></span> مقبول (2)</td>
-        <td colspan="2" id="scale_1"><span class="check-box" id="cb_1"></span> غير مرضي (1)</td>
-    </tr>
-</table>
+            </td>
+        </tr>
+        <tr>
+            <th style="width: 15%;">التخصص</th>
+            <td style="width: 18%;"><input type="text"></td>
+            
+            <th style="width: 15%;">مادة التدريس</th>
+            <td style="width: 18%;"><input type="text"></td>
+            
+            <th style="width: 15%;">الأداء السابق</th>
+            <td style="width: 19%;">
+                <input type="text" maxlength="2" style="width: 60px; text-align: center;" placeholder="رقم">
+            </td>
+        </tr>
+    </table>
 
-<!-- ===================== التوضيحات والمعادلات ===================== -->
-<div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: bold; font-size: 13px; color: #135c34;">
-    <span>التقدير العام للأداء (1-5) = المجموع / 11</span>
-    <span>النسبة (100%) = (المجموع / 55) * 100</span>
-</div>
+    <!-- ===================== التقييم ===================== -->
+    <table id="evalTable">
+        <tr>
+            <th style="width: 5%;">م</th>
+            <th style="width: 35%;">عنصر التقييم</th>
+            <th style="width: 10%;">الوزن النسبي</th>
+            <th style="width: 10%;">5</th>
+            <th style="width: 10%;">4</th>
+            <th style="width: 10%;">3</th>
+            <th style="width: 10%;">2</th>
+            <th style="width: 10%;">1</th>
+        </tr>
 
-<!-- ===================== التوقيع والاعتماد ===================== -->
-<div class="signatures">
-    <div class="sig-box">
-        <strong>اسم مدير المدرسة</strong>
-        <input type="text" class="line-input">
-    </div>
-    <div class="sig-box">
-        <strong>التوقيع</strong>
-        <div class="line-input" style="height: 20px; border-bottom: 1px dashed #333;"></div>
-    </div>
-    <div class="sig-box">
-        <strong>التاريخ</strong>
-        <input type="text" class="line-input" id="current_date" placeholder="يوم / شهر / سنة هـ">
-    </div>
-    <div class="sig-box">
-        <strong>الختم</strong>
-        <div class="stamp-circle">مكان الختم</div>
-    </div>
-</div>
+        <script>
+        const items = [
+            ["أداء الواجبات والمهمات الوظيفية", 10],
+            ["التفاعل المهني المستمر", 10],
+            ["التواصل مع أولياء الأمور", 10],
+            ["استخدام استراتيجيات التدريس الحديثة", 10],
+            ["الجهود المبذولة في تحسين نتائج الطلاب", 10],
+            ["تنفيذ الخطة التعليمية", 10],
+            ["توظيف التقنيات في التعليم", 10],
+            ["تهيئة البيئة الصفية", 5],
+            ["الإدارة الصفية الفاعلة", 5],
+            ["تحليل نتائج الاختبارات وتوظيفها", 10],
+            ["التقويم المستمر للطلاب", 10]
+        ];
 
-<!-- ===================== المربع المؤقت للنتائج ===================== -->
-<div class="result" id="result">
-    النتيجة ستظهر هنا وتُحدث في الجدول أعلاه تلقائياً
-</div>
+        document.write(items.map((item, i) => `
+        <tr>
+            <td>${i+1}</td>
+            <td>${item[0]}</td>
+            <td>${item[1]}%</td>
+            ${[5, 4, 3, 2, 1].map(v => `
+            <td><input type="radio" name="q${i}" value="${v}" onclick="calc(${i})"></td>
+            `).join('')}
+        </tr>
+        `).join(''));
+        </script>
+    </table>
 
-<div class="buttons">
-    <button onclick="window.print()">🖨️ طباعة النموذج (PDF)</button>
-</div>
+    <!-- ===================== جدول خلاصة التقييم ===================== -->
+    <table id="summaryTable">
+        <tr>
+            <th style="width: 28%;">رقم عنصر التقييم</th>
+            <th style="width: 5%;">1</th>
+            <th style="width: 5%;">2</th>
+            <th style="width: 5%;">3</th>
+            <th style="width: 5%;">4</th>
+            <th style="width: 5%;">5</th>
+            <th style="width: 5%;">6</th>
+            <th style="width: 5%;">7</th>
+            <th style="width: 5%;">8</th>
+            <th style="width: 5%;">9</th>
+            <th style="width: 5%;">10</th>
+            <th style="width: 5%;">11</th>
+            <th style="width: 12%;">المجموع</th>
+        </tr>
+        <tr>
+            <th>تقييم الأداء الوظيفي للعنصر ( 1-5 )</th>
+            <td id="val_0"></td>
+            <td id="val_1"></td>
+            <td id="val_2"></td>
+            <td id="val_3"></td>
+            <td id="val_4"></td>
+            <td id="val_5"></td>
+            <td id="val_6"></td>
+            <td id="val_7"></td>
+            <td id="val_8"></td>
+            <td id="val_9"></td>
+            <td id="val_10"></td>
+            <td id="val_total" style="font-weight:bold; color:#135c34; font-size:14px;"></td>
+        </tr>
+        <tr>
+            <th>التقييم العام للأداء</th>
+            <td colspan="12">
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                    <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
+                        الأداء من 5: <span id="summary_avg" style="font-weight: bold; font-size: 14px;">-</span>
+                    </div>
+                    <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
+                        النسبة %: <span id="summary_percent" style="font-weight: bold; font-size: 14px;">-</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>التقدير العام</th>
+            <td colspan="2" id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز (5)</td>
+            <td colspan="3" id="scale_4"><span class="check-box" id="cb_4"></span> جيد جداً (4)</td>
+            <td colspan="2" id="scale_3"><span class="check-box" id="cb_3"></span> جيد (3)</td>
+            <td colspan="3" id="scale_2"><span class="check-box" id="cb_2"></span> مقبول (2)</td>
+            <td colspan="2" id="scale_1"><span class="check-box" id="cb_1"></span> غير مرضي (1)</td>
+        </tr>
+    </table>
+
+    <!-- ===================== التوضيحات والمعادلات ===================== -->
+    <div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: bold; font-size: 13px; color: #135c34;">
+        <span>التقدير العام للأداء (1-5) = المجموع / 11</span>
+        <span>النسبة (100%) = (المجموع / 55) * 100</span>
+    </div>
+
+    <!-- ===================== التوقيع والاعتماد ===================== -->
+    <div class="signatures">
+        <div class="sig-box">
+            <strong>اسم مدير المدرسة</strong>
+            <input type="text" class="line-input">
+        </div>
+        <div class="sig-box">
+            <strong>التوقيع</strong>
+            <div class="line-input" style="height: 20px; border-bottom: 1px dashed #333;"></div>
+        </div>
+        <div class="sig-box">
+            <strong>التاريخ</strong>
+            <input type="text" class="line-input" id="current_date" placeholder="يوم / شهر / سنة هـ">
+        </div>
+        <div class="sig-box">
+            <strong>الختم</strong>
+            <div class="stamp-circle">مكان الختم</div>
+        </div>
+    </div>
+
+    <!-- ===================== المربع المؤقت للنتائج ===================== -->
+    <div class="result" id="result">
+        النتيجة ستظهر هنا وتُحدث في الجدول أعلاه تلقائياً
+    </div>
+
+    <div class="buttons">
+        <button onclick="window.print()">🖨️ طباعة النموذج (PDF)</button>
+    </div>
+
+</div> <!-- نهاية حاوية الـ A4 -->
 
 <!-- عنصر التنبيه العائم -->
 <div id="toast"></div>
