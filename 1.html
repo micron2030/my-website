@@ -8,77 +8,80 @@
 body{
     font-family: Tahoma;
     background:#eef2f7;
-    padding:20px;
+    padding:15px;
+    font-size:14px;
 }
 
-/* 🔥 السر الحقيقي: توحيد الشبكة */
+/* ضغط المسافات للطباعة */
 table{
     width:100%;
     border-collapse:collapse;
     table-layout:fixed;
     background:white;
-    margin-bottom:15px;
+    margin-bottom:10px;
 }
 
 th,td{
     border:1px solid #ccc;
-    padding:8px;
+    padding:5px;
     text-align:center;
     vertical-align:middle;
+    line-height:1.2;
 }
 
 th{
     background:#2c7be5;
     color:white;
+    font-size:13px;
 }
 
-/* إدخالات */
+/* إدخالات مضغوطة */
 input[type="text"], input[type="date"]{
     width:100%;
     text-align:center;
-    padding:4px;
+    padding:3px;
+    font-size:13px;
     box-sizing:border-box;
 }
 
 /* مربعات السجل */
 .id-box{
     width:18px;
-    height:22px;
+    height:20px;
     text-align:center;
     border:1px solid #999;
     margin:0 1px;
+    font-size:13px;
 }
 
 /* النتائج */
 .result{
     background:white;
-    padding:15px;
+    padding:10px;
     border:2px solid #2c7be5;
-    border-radius:10px;
-    font-size:18px;
+    border-radius:8px;
+    font-size:15px;
 }
-
-.good{color:green;}
-.medium{color:orange;}
-.bad{color:red;}
 
 /* أزرار */
 .buttons{
     text-align:center;
-    margin-top:15px;
+    margin-top:10px;
 }
 
 button{
-    padding:10px 18px;
+    padding:8px 15px;
     margin:5px;
     border:none;
-    border-radius:8px;
+    border-radius:6px;
     background:#2c7be5;
     color:white;
     cursor:pointer;
 }
 
+/* طباعة صفحة واحدة */
 @media print{
+    body{zoom:0.95;}
     .buttons{display:none;}
 }
 </style>
@@ -86,9 +89,9 @@ button{
 
 <body>
 
-<h2 style="text-align:center;">نموذج تقييم أداء المعلم</h2>
+<h2 style="text-align:center; font-size:16px;">نموذج تقييم أداء المعلم</h2>
 
-<!-- ===================== 1. رأس النموذج ===================== -->
+<!-- ===================== الرأس ===================== -->
 <table>
 
 <tr>
@@ -100,20 +103,19 @@ button{
 
 <tr>
 <td colspan="2"><input type="text"></td>
-<td colspan="3"><input type="text" placeholder="1447 - 1448"></td>
+<td colspan="3"><input type="text"></td>
 
 <td colspan="2">
 <label><input type="radio" name="term"> الأول</label>
 <label><input type="radio" name="term"> الثاني</label>
 </td>
 
-<td colspan="1">من <input type="date"></td>
-<td colspan="2">إلى <input type="date"></td>
+<td colspan="3">من <input type="date"> إلى <input type="date"></td>
 </tr>
 
 </table>
 
-<!-- ===================== 2. بيانات المعلم ===================== -->
+<!-- ===================== بيانات المعلم ===================== -->
 <table>
 
 <tr>
@@ -122,34 +124,43 @@ button{
 </tr>
 
 <tr>
-<td colspan="5"><input type="text" placeholder="اسم المعلم"></td>
+<td colspan="5"><input type="text"></td>
 
 <td colspan="5">
 <div style="display:flex; justify-content:center;">
 <script>
 for(let i=0;i<10;i++){
-document.write('<input maxlength="1" class="id-box">');
+document.write(`<input class="id-box" maxlength="1" id="id${i}" oninput="moveNext(this,${i})">`);
 }
 </script>
 </div>
 </td>
 </tr>
 
-<!-- صف مهني موحد على نفس الشبكة -->
+<!-- الأداء السابق تحت السجل المدني -->
 <tr>
-<th colspan="2">التخصص</th>
-<td colspan="3"><input type="text"></td>
+<th colspan="5">التخصص</th>
+<th colspan="5">مادة التدريس</th>
+</tr>
 
-<th colspan="2">مادة التدريس</th>
-<td colspan="2"><input type="text"></td>
+<tr>
+<td colspan="5"><input type="text"></td>
+<td colspan="5"><input type="text"></td>
+</tr>
 
-<th colspan="1">الأداء السابق</th>
-<td colspan="0"></td>
+<tr>
+<th colspan="10">الأداء السابق (رقم من خانتين)</th>
+</tr>
+
+<tr>
+<td colspan="10">
+<input type="text" maxlength="2" style="width:80px; text-align:center;">
+</td>
 </tr>
 
 </table>
 
-<!-- ===================== 3. التقييم ===================== -->
+<!-- ===================== التقييم ===================== -->
 <table>
 
 <tr>
@@ -165,17 +176,17 @@ document.write('<input maxlength="1" class="id-box">');
 
 <script>
 const items = [
-["أداء الواجبات الوظيفية",10],
-["التفاعل مع المجتمع المهني",10],
-["التفاعل مع أولياء الأمور",10],
-["التنوع في استراتيجيات التدريس",10],
-["تحسين نتائج المتعلمين",10],
-["إعداد وتنفيذ خطة التعلم",10],
-["توظيف تقنيات ووسائل التعلم",10],
-["تهيئة بيئة تعليمية",5],
+["أداء الواجبات",10],
+["التفاعل المهني",10],
+["أولياء الأمور",10],
+["استراتيجيات التدريس",10],
+["تحسين النتائج",10],
+["الخطة التعليمية",10],
+["التقنيات",10],
+["البيئة الصفية",5],
 ["الإدارة الصفية",5],
-["تحليل نتائج المتعلمين",10],
-["تنوع أساليب التقويم",10]
+["تحليل النتائج",10],
+["التقويم",10]
 ];
 
 document.write(items.map((item,i)=>`
@@ -194,55 +205,59 @@ ${[5,4,3,2,1].map(v=>`
 
 <!-- ===================== النتائج ===================== -->
 <div class="result" id="result">
-النتيجة ستظهر بعد إكمال التقييم
+النتيجة ستظهر بعد الإكمال
 </div>
 
-<!-- ===================== الأزرار ===================== -->
 <div class="buttons">
 <button onclick="window.print()">🖨️ طباعة / PDF</button>
 </div>
 
-<!-- ===================== الحساب ===================== -->
 <script>
+
+/* 🔁 الانتقال التلقائي بين مربعات السجل */
+function moveNext(el,i){
+if(el.value.length === 1){
+let next = document.getElementById("id"+(i+1));
+if(next) next.focus();
+}
+}
+
+/* الحساب */
 function calc(){
 
-let weightedSum = 0;
-let totalWeight = 0;
-let count = 0;
+let sum=0, weight=0, count=0;
 
 for(let i=0;i<items.length;i++){
-let selected = document.querySelector(`input[name="q${i}"]:checked`);
-let weight = items[i][1];
-
-if(selected){
-weightedSum += parseInt(selected.value) * weight;
-totalWeight += weight;
+let sel=document.querySelector(`input[name="q${i}"]:checked`);
+if(sel){
+sum += sel.value * items[i][1];
+weight += items[i][1];
 count++;
 }
 }
 
-if(count < items.length){
-document.getElementById("result").innerHTML="⚠️ أكمل جميع عناصر التقييم";
+if(count<items.length){
+document.getElementById("result").innerHTML="⚠️ أكمل التقييم";
 return;
 }
 
-let avg = (weightedSum / totalWeight).toFixed(2);
-let percent = ((avg/5)*100).toFixed(2);
+let avg=(sum/weight).toFixed(2);
+let percent=((avg/5)*100).toFixed(2);
 
-let grade="", cls="";
-
-if(avg>=4.5){grade="ممتاز";cls="good";}
-else if(avg>=3.5){grade="جيد جداً";cls="good";}
-else if(avg>=2.5){grade="جيد";cls="medium";}
-else if(avg>=1.5){grade="مقبول";cls="medium";}
-else{grade="غير مرضي";cls="bad";}
+let grade="";
+if(avg>=4.5) grade="ممتاز";
+else if(avg>=3.5) grade="جيد جداً";
+else if(avg>=2.5) grade="جيد";
+else if(avg>=1.5) grade="مقبول";
+else grade="غير مرضي";
 
 document.getElementById("result").innerHTML=`
-📊 المتوسط: <b>${avg}</b> من 5<br>
-📈 النسبة: <b>${percent}%</b><br>
-🏆 التقدير: <b class="${cls}">${grade}</b>
+📊 المتوسط: ${avg}<br>
+📈 النسبة: ${percent}%<br>
+🏆 التقدير: ${grade}
 `;
 }
+
 </script>
 
 </body>
