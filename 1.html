@@ -308,7 +308,7 @@
     }
 
     /* ============================================================
-       تعديلات الطباعة لضمان وضوح النصوص فقط باللون الأسود
+       تعديلات الطباعة - إزالة كافة التظليلات والرمادي
        ============================================================ */
     @media print {
         body { 
@@ -317,12 +317,19 @@
             display: block !important; 
         }
         
-        /* إجبار كافة النصوص على اللون الأسود الصريح لضمان عدم ظهور اللون الرمادي */
+        /* إجبار كافة النصوص والأيقونات على اللون الأسود الصريح */
         * {
             color: #000 !important; 
             text-shadow: none !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+        }
+
+        /* إزالة خلفيات العناوين والبصمات في الطباعة */
+        th, .summary-badge, .signatures, .tables-frame, select, input, .moe-header-container {
+            background-color: transparent !important;
+            background: none !important;
+            box-shadow: none !important;
         }
 
         .a4-wrapper { 
@@ -338,34 +345,25 @@
             border: 1px solid #000 !important;
         }
 
-        /* الحدود في الطباعة - جعلها واضحة دون مبالغة في السماكة */
+        /* حدود رقيقة وواضحة جداً في الطباعة لضمان النظافة */
         table, th, td, .tables-frame, .signatures, .id-box, .check-box {
             border-color: #000 !important;
-            border-width: 0.75pt !important; /* حدود رقيقة ولكن واضحة وسوداء */
+            border-width: 0.75pt !important;
         }
 
         .buttons, #toast, .result { display: none !important; }
-        
-        .signatures { 
-            background: #fff !important; 
-            border: 1px solid #000 !important;
-        }
 
+        /* سهم القائمة المنسدلة بدون أي تظليل خلفي */
         select {
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: left 8px center !important;
             border: 1px solid #000 !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
         }
         
-        input[type="text"] { border: 1px solid #000 !important; }
-
-        .summary-badge { 
-            background: #fff !important; 
-            border: 1px solid #000 !important; 
-        }
-
         .clean-input::placeholder { color: transparent !important; }
-        
-        /* إلغاء التظليل الأحمر للمنسيات عند الطباعة ليبقى النص أسود على خلفية بيضاء */
         #evalTable tr.missed-row { background-color: transparent !important; }
     }
 </style>
