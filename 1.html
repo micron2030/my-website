@@ -3,171 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نموذج تقييم أداء المعلم - النسخة النهائية</title>
+<title>نموذج تقييم أداء المعلم - النسخة النهائية المطورة</title>
+
+<!-- استيراد خط تجوال العربي من جوجل فونتس ليعطي طابعاً جمالياً يشبه المهند -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
     /* إعدادات الطباعة لصفحة A4 */
     @page {
         size: A4;
-        margin: 10mm; /* هوامش ضيقة للطباعة */
+        margin: 0;
     }
 
-    /* خلفية المتصفح (للشاشات) */
+    /* خلفية المتصفح */
     body {
-        font-family: Tahoma, Arial, sans-serif;
-        background: #525659; /* لون خلفية غامق قليلاً يبرز الورقة */
+        font-family: 'Tajawal', Tahoma, Arial, sans-serif;
+        background: #333a40;
         margin: 0;
         padding: 20px 0;
         display: flex;
-        justify-content: center; /* توسيط الورقة في منتصف الشاشة */
+        justify-content: center;
     }
 
-    /* ورقة الـ A4 الافتراضية على الشاشة */
+    /* ورقة الـ A4 الافتراضية */
     .a4-wrapper {
         background: white;
-        width: 210mm; /* عرض الـ A4 القياسي */
-        min-height: 297mm; /* طول الـ A4 القياسي */
-        padding: 10mm; /* الهوامش الداخلية للورقة */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* ظل يعطي إيحاء الورقة الحقيقية */
+        width: 210mm; 
+        min-height: 297mm; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
         box-sizing: border-box;
-        font-size: 13px; /* تصغير الخط العام */
         color: #333;
-        max-width: 100%; /* ليتجاوب مع الشاشات الصغيرة لو لزم الأمر */
+        max-width: 100%; 
+        position: relative;
+        overflow: hidden;
     }
 
-    /* كليشة الوزارة */
+    /* الكليشة العلوية - تمتد لكامل العرض مع خلفية متدرجة */
+    .moe-header-container {
+        background: linear-gradient(135deg, #103b51 0%, #38a169 100%);
+        padding: 25px 40px;
+        color: white; 
+        border-bottom: 4px solid #c2a06c; /* الشريط الذهبي */
+        border-radius: 0 0 20px 20px; 
+    }
+
     .moe-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 5px;
-        font-size: 12px;
-        font-weight: bold;
+        font-size: 14px;
+        font-weight: 700;
     }
 
     .moe-header p {
-        margin: 3px 0;
+        margin: 4px 0;
+        color: white !important;
+    }
+
+    /* تصغير حجم النقاط والبيانات في اليسار */
+    .moe-left p {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .dots {
+        font-size: 10px;
+        letter-spacing: 1px;
     }
 
     .moe-center img {
-        height: 70px;
+        height: 75px;
+        filter: brightness(0) invert(1);
     }
 
+    /* حاوية المحتوى تحت الكليشة */
+    .content-area {
+        padding: 0 12mm 12mm 12mm;
+    }
+
+    /* العنوان داخل مستطيل دائري */
     h2 {
         text-align: center;
-        font-size: 16px;
-        margin-top: 0;
-        margin-bottom: 10px;
-        color: #135c34; /* أخضر الوزارة */
+        font-size: 20px;
+        margin: 30px auto 25px auto;
+        color: #103b51; 
+        border: 2px solid #103b51;
+        border-radius: 12px;
+        padding: 8px 35px;
+        width: max-content;
+        background-color: #f0f7f9;
+        font-weight: 700;
     }
 
-    /* إعدادات الجداول الموحدة والمضغوطة */
+    /* إطار الجداول */
+    .tables-frame {
+        border: 2px solid #103b51;
+        border-radius: 12px;
+        padding: 15px;
+        background-color: #ffffff;
+        margin-bottom: 15px;
+    }
+
+    /* إعدادات الجداول */
     table {
         width: 100%;
         border-collapse: collapse;
-        background: white;
-        margin-bottom: 8px; /* تقليل المسافة بين الجداول */
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
     }
 
     th, td {
         border: 1px solid #c0c9d8;
-        padding: 4px; /* تقليل الحشو الداخلي للخلايا */
+        padding: 8px;
         vertical-align: middle;
-        line-height: 1.2; /* تقليل ارتفاع السطر */
+        line-height: 1.5;
     }
 
     th {
-        background: #135c34; /* أخضر الوزارة */
+        background: #103b51; 
         color: white;
-        font-size: 12px;
-        font-weight: bold;
+        font-size: 13px;
+        font-weight: 700;
         text-align: right; 
         white-space: nowrap;
     }
 
     td {
-        font-size: 12px;
+        font-size: 13px;
     }
 
-    /* استثناءات لمحاذاة النصوص في المنتصف */
     #evalTable th, #evalTable td, #summaryTable th, #summaryTable td {
         text-align: center;
     }
     #evalTable td:nth-child(2), #summaryTable th:first-child {
         text-align: right;
-        padding-right: 10px;
+        padding-right: 15px;
     }
 
-    /* إدخالات النصوص والتواريخ والقوائم */
-    input[type="text"], input[type="date"], select {
+    input[type="text"], select {
         width: 100%;
-        padding: 3px; /* تصغير الحشو */
-        font-size: 12px;
+        padding: 6px;
+        font-size: 13px;
         border: 1px solid #ccc;
-        border-radius: 3px;
+        border-radius: 4px;
         box-sizing: border-box;
-        font-family: inherit;
+        font-family: 'Tajawal', sans-serif;
     }
     
-    input[type="text"]:focus, input[type="date"]:focus, select:focus {
+    input[type="text"]:focus, select:focus {
         outline: none;
-        border-color: #135c34;
+        border-color: #38a169;
     }
 
     /* مربعات السجل المدني */
-    .id-container {
-        display: flex; 
-        justify-content: flex-start; 
-        direction: ltr; 
-    }
-
     .id-box {
-        width: 25px !important; /* إرجاعها لشكل مربع */
+        width: 25px !important; 
         height: 25px !important;
-        padding: 0 !important; /* إزالة أي تباعد داخلي يضغط الرقم */
+        padding: 0 !important; 
         text-align: center !important;
         border: 1px solid #777 !important;
         margin: 0 2px;
         font-size: 14px !important;
         border-radius: 3px;
-        box-sizing: border-box !important;
+        font-family: 'Tajawal', sans-serif;
     }
 
-    /* تنسيقات الراديو */
-    label {
-        cursor: pointer;
-        font-size: 12px;
-    }
-
-    /* النتائج */
     .result {
         background: white;
-        padding: 10px;
-        border: 2px solid #135c34;
-        border-radius: 6px;
-        font-size: 14px;
+        padding: 12px;
+        border: 2px solid #103b51;
+        border-radius: 8px;
+        font-size: 16px;
         text-align: center;
-        font-weight: bold;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-bottom: 10px;
+        font-weight: 700;
+        margin-bottom: 15px;
     }
 
-    /* قسم التوقيعات مصغر */
+    /* التوقيعات */
     .signatures {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         margin-top: 10px;
         text-align: center;
-        background: white;
-        padding: 10px;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        background: #f8fcf9;
+        padding: 15px;
+        border: 1px solid #c0c9d8;
+        border-radius: 10px;
     }
 
     .sig-box {
-        width: 23%;
-        font-size: 12px;
+        width: 30%;
+        font-size: 14px;
     }
 
     .line-input {
@@ -176,60 +201,46 @@
         border-right: none !important;
         border-bottom: 1px dashed #333 !important;
         background: transparent !important;
-        border-radius: 0 !important;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 15px;
+        font-family: 'Tajawal', sans-serif;
     }
 
-    .stamp-circle {
-        width: 60px; /* تصغير دائرة الختم */
-        height: 60px;
-        border: 2px dashed #999;
-        border-radius: 50%;
-        margin: 5px auto 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #999;
-        font-size: 11px;
-    }
-
-    /* مربع الاختيار الخاص بالطباعة */
     .check-box {
         display: inline-block;
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 16px;
         border: 1px solid #777;
         margin-left: 5px;
         vertical-align: middle;
         text-align: center;
-        line-height: 14px;
+        line-height: 16px;
         font-size: 14px;
+        border-radius: 2px;
     }
 
-    /* أزرار */
     .buttons {
         text-align: center;
-        margin-top: 10px;
+        margin-top: 15px;
     }
 
     button {
-        padding: 8px 15px;
-        margin: 5px;
+        padding: 10px 25px;
         border: none;
-        border-radius: 5px;
-        background: #135c34; /* أخضر الوزارة */
+        border-radius: 6px;
+        background: #38a169; 
         color: white;
-        font-size: 13px;
-        font-family: Tahoma;
+        font-size: 15px;
+        font-family: 'Tajawal', sans-serif;
+        font-weight: 700;
         cursor: pointer;
+        transition: background 0.3s;
     }
 
     button:hover {
-        background: #0d4024;
+        background: #103b51;
     }
 
-    /* تنبيه متراكب (Toast) */
     #toast {
         visibility: hidden;
         min-width: 250px;
@@ -239,36 +250,32 @@
         border-radius: 4px;
         padding: 12px;
         position: fixed;
-        z-index: 1000;
         left: 50%;
         bottom: 30px;
         transform: translateX(-50%);
-        font-size: 14px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         opacity: 0;
-        transition: opacity 0.5s, visibility 0.5s;
+        transition: opacity 0.5s;
+        z-index: 9999;
+        font-weight: 700;
     }
-    #toast.show {
-        visibility: visible;
-        opacity: 1;
-    }
+    #toast.show { visibility: visible; opacity: 1; }
 
-    /* تنسيق الطباعة النهائي */
     @media print {
         body { background: white; padding: 0; display: block; }
-        .a4-wrapper { 
-            width: 100%; 
-            min-height: auto; 
-            padding: 0; 
-            box-shadow: none; 
-            max-width: none; 
+        .a4-wrapper { width: 100%; box-shadow: none; padding: 0; }
+        .moe-header-container { 
+            background: linear-gradient(135deg, #103b51 0%, #38a169 100%) !important;
+            color: white !important; 
+            -webkit-print-color-adjust: exact;
+            border-bottom: 4px solid #c2a06c !important;
         }
-        table, .signatures { box-shadow: none; border: none; margin-bottom: 5px; }
-        th { background: #e0e0e0 !important; color: black !important; -webkit-print-color-adjust: exact; }
+        .moe-header p { color: white !important; }
+        .moe-center img { filter: brightness(0) invert(1) !important; }
+        .tables-frame { border-color: #000; }
+        h2 { border-color: #000; background-color: transparent; }
+        th { background: #103b51 !important; color: white !important; -webkit-print-color-adjust: exact; }
         .buttons, .result, #toast { display: none !important; }
-        input[type="text"], input[type="date"], select, .id-box { border: 1px solid #000 !important; }
-        .line-input { border-bottom: 1px solid #000 !important; }
-        .stamp-circle { border-color: #000; }
+        input[type="text"], select, .id-box { border: 1px solid #000 !important; }
     }
 </style>
 </head>
@@ -277,260 +284,204 @@
 
 <div class="a4-wrapper">
 
-    <!-- ===================== كليشة الوزارة ===================== -->
-    <div class="moe-header">
-        <div class="moe-right" style="text-align: center; min-width: 180px;">
-            <p>المملكة العربية السعودية</p>
-            <p style="margin-right: 25px;">وزارة التعليم</p>
-            <p>"مدرسة العزيزية الثانوية"</p>
-        </div>
-        
-        <div class="moe-center">
-            <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار وزارة التعليم">
-        </div>
-        
-        <div class="moe-left">
-            <p>الرقم: ..............................</p>
-            <p>التاريخ: <span id="header_date_span"></span></p>
-            <p>المرفقات: ..........................</p>
+    <!-- ===================== كليشة الوزارة المطورة (كاملة العرض) ===================== -->
+    <div class="moe-header-container">
+        <div class="moe-header">
+            <div class="moe-right" style="text-align: center; min-width: 180px;">
+                <p>المملكة العربية السعودية</p>
+                <p>وزارة التعليم</p>
+                <p>"مدرسة العزيزية الثانوية"</p>
+            </div>
+            
+            <div class="moe-center">
+                <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار وزارة التعليم">
+            </div>
+            
+            <div class="moe-left" style="text-align: right;">
+                <p>الرقم: <span class="dots">.......................</span></p>
+                <p>التاريخ: <span id="header_date_span"></span></p>
+                <p>المرفقات: <span class="dots">...................</span></p>
+            </div>
         </div>
     </div>
 
-    <h2>نموذج تقييم أداء المعلم</h2>
+    <!-- المحتوى الفعلي تحت الكليشة -->
+    <div class="content-area">
 
-    <!-- ===================== بيانات التقييم ===================== -->
-    <table>
-        <tr>
-            <th style="width: 9%;">رقم التقييم</th>
-            <td style="width: 6%;">
-                <input type="text" maxlength="2" style="width: 100%; text-align: center;" value="0" onblur="if(this.value.trim() === '') this.value = '0';">
-            </td>
-            
-            <th style="width: 10%;">العام الدراسي</th>
-            <td style="width: 12%;">
-                <select>
-                    <option value="1440">1440 هـ</option>
-                    <option value="1441">1441 هـ</option>
-                    <option value="1442">1442 هـ</option>
-                    <option value="1443">1443 هـ</option>
-                    <option value="1444">1444 هـ</option>
-                    <option value="1445" selected>1445 هـ</option>
-                    <option value="1446">1446 هـ</option>
-                    <option value="1447">1447 هـ</option>
-                    <option value="1448">1448 هـ</option>
-                    <option value="1449">1449 هـ</option>
-                    <option value="1450">1450 هـ</option>
-                </select>
-            </td>
-            
-            <th style="width: 9%;">الفصل الدراسي</th>
-            <td style="width: 14%;">
-                <select>
-                    <option value="الأول">الأول</option>
-                    <option value="الثاني">الثاني</option>
-                </select>
-            </td>
-            
-            <th style="width: 10%;">فترة التقييم</th>
-            <td style="width: 30%;">
-                <div style="display: flex; align-items: center; gap: 5px;">
-                    <span>من</span>
-                    <input type="text" placeholder="يوم / شهر / سنة هـ" style="text-align: center; flex: 1;">
-                    <span>إلى</span>
-                    <input type="text" placeholder="يوم / شهر / سنة هـ" style="text-align: center; flex: 1;">
-                </div>
-            </td>
-        </tr>
-    </table>
+        <h2>نموذج تقييم أداء المعلم</h2>
 
-    <!-- ===================== بيانات المعلم ===================== -->
-    <table>
-        <tr>
-            <th style="width: 15%;">اسم المعلم رباعياً</th>
-            <td colspan="2" style="width: 35%;"><input type="text"></td>
-            
-            <th style="width: 15%;">السجل المدني</th>
-            <td colspan="2" style="width: 35%;">
-                <div class="id-container">
-                    <script>
-                        for(let i=0; i<10; i++){
-                            document.write(`<input class="id-box" type="text" maxlength="1" id="id${i}" oninput="moveNext(this,${i})">`);
-                        }
-                    </script>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <th style="width: 15%;">التخصص</th>
-            <td style="width: 18%;"><input type="text"></td>
-            
-            <th style="width: 15%;">مادة التدريس</th>
-            <td style="width: 18%;"><input type="text"></td>
-            
-            <th style="width: 15%;">الأداء السابق</th>
-            <td style="width: 19%;">
-                <input type="text" maxlength="2" style="width: 60px; text-align: center;" placeholder="رقم">
-            </td>
-        </tr>
-    </table>
+        <div class="tables-frame">
+            <!-- بيانات التقييم -->
+            <table>
+                <tr>
+                    <th style="width: 10%;">رقم التقييم</th>
+                    <td style="width: 8%;">
+                        <input type="text" maxlength="2" style="text-align: center;" value="0" onblur="if(this.value.trim() === '') this.value = '0';">
+                    </td>
+                    
+                    <th style="width: 12%;">العام الدراسي</th>
+                    <td style="width: 15%;">
+                        <select>
+                            <option value="1445" selected>1445 هـ</option>
+                            <option value="1446">1446 هـ</option>
+                            <option value="1447">1447 هـ</option>
+                        </select>
+                    </td>
+                    
+                    <th style="width: 12%;">الفصل الدراسي</th>
+                    <td style="width: 15%;">
+                        <select>
+                            <option value="الأول">الأول</option>
+                            <option value="الثاني">الثاني</option>
+                            <option value="الثالث">الثالث</option>
+                        </select>
+                    </td>
+                    
+                    <th style="width: 10%;">فترة التقييم</th>
+                    <td style="width: 18%;">
+                        <input type="text" placeholder="يوم / شهر / هـ" style="text-align: center;">
+                    </td>
+                </tr>
+            </table>
 
-    <!-- ===================== التقييم ===================== -->
-    <table id="evalTable">
-        <tr>
-            <th style="width: 5%;">م</th>
-            <th style="width: 35%;">عنصر التقييم</th>
-            <th style="width: 10%;">الوزن النسبي</th>
-            <th style="width: 10%;">5</th>
-            <th style="width: 10%;">4</th>
-            <th style="width: 10%;">3</th>
-            <th style="width: 10%;">2</th>
-            <th style="width: 10%;">1</th>
-        </tr>
+            <!-- بيانات المعلم -->
+            <table>
+                <tr>
+                    <th style="width: 15%;">اسم المعلم رباعياً</th>
+                    <td colspan="2"><input type="text"></td>
+                    
+                    <th style="width: 15%;">السجل المدني</th>
+                    <td>
+                        <div style="display: flex; direction: ltr; justify-content: center;">
+                            <script>
+                                for(let i=0; i<10; i++){
+                                    document.write(`<input class="id-box" type="text" maxlength="1" id="id${i}" oninput="moveNext(this,${i})">`);
+                                }
+                            </script>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>التخصص</th>
+                    <td><input type="text"></td>
+                    <th>مادة التدريس</th>
+                    <td><input type="text"></td>
+                    <th style="width: 15%;">الأداء السابق</th>
+                    <td><input type="text" maxlength="2" style="text-align: center;"></td>
+                </tr>
+            </table>
 
-        <script>
-        const items = [
-            ["أداء الواجبات والمهمات الوظيفية", 10],
-            ["التفاعل المهني المستمر", 10],
-            ["التواصل مع أولياء الأمور", 10],
-            ["استخدام استراتيجيات التدريس الحديثة", 10],
-            ["الجهود المبذولة في تحسين نتائج الطلاب", 10],
-            ["تنفيذ الخطة التعليمية", 10],
-            ["توظيف التقنيات في التعليم", 10],
-            ["تهيئة البيئة الصفية", 5],
-            ["الإدارة الصفية الفاعلة", 5],
-            ["تحليل نتائج الاختبارات وتوظيفها", 10],
-            ["التقويم المستمر للطلاب", 10]
-        ];
+            <!-- التقييم -->
+            <table id="evalTable">
+                <tr>
+                    <th style="width: 5%;">م</th>
+                    <th>عنصر التقييم</th>
+                    <th style="width: 10%;">الوزن النسبي</th>
+                    <th style="width: 8%;">5</th>
+                    <th style="width: 8%;">4</th>
+                    <th style="width: 8%;">3</th>
+                    <th style="width: 8%;">2</th>
+                    <th style="width: 8%;">1</th>
+                </tr>
+                <script>
+                const items = [
+                    ["أداء الواجبات والمهمات الوظيفية", 10],
+                    ["التفاعل المهني المستمر", 10],
+                    ["التواصل مع أولياء الأمور", 10],
+                    ["استخدام استراتيجيات التدريس الحديثة", 10],
+                    ["الجهود المبذولة في تحسين نتائج الطلاب", 10],
+                    ["تنفيذ الخطة التعليمية", 10],
+                    ["توظيف التقنيات في التعليم", 10],
+                    ["تهيئة البيئة الصفية", 5],
+                    ["الإدارة الصفية الفاعلة", 5],
+                    ["تحليل نتائج الاختبارات وتوظيفها", 10],
+                    ["التقويم المستمر للطلاب", 10]
+                ];
+                document.write(items.map((item, i) => `
+                <tr>
+                    <td>${i+1}</td>
+                    <td>${item[0]}</td>
+                    <td>${item[1]}%</td>
+                    ${[5, 4, 3, 2, 1].map(v => `
+                    <td><input type="radio" name="q${i}" value="${v}" onclick="calc(${i})"></td>
+                    `).join('')}
+                </tr>
+                `).join(''));
+                </script>
+            </table>
 
-        document.write(items.map((item, i) => `
-        <tr>
-            <td>${i+1}</td>
-            <td>${item[0]}</td>
-            <td>${item[1]}%</td>
-            ${[5, 4, 3, 2, 1].map(v => `
-            <td><input type="radio" name="q${i}" value="${v}" onclick="calc(${i})"></td>
-            `).join('')}
-        </tr>
-        `).join(''));
-        </script>
-    </table>
-
-    <!-- ===================== جدول خلاصة التقييم ===================== -->
-    <table id="summaryTable">
-        <tr>
-            <th style="width: 28%;">رقم عنصر التقييم</th>
-            <th style="width: 5%;">1</th>
-            <th style="width: 5%;">2</th>
-            <th style="width: 5%;">3</th>
-            <th style="width: 5%;">4</th>
-            <th style="width: 5%;">5</th>
-            <th style="width: 5%;">6</th>
-            <th style="width: 5%;">7</th>
-            <th style="width: 5%;">8</th>
-            <th style="width: 5%;">9</th>
-            <th style="width: 5%;">10</th>
-            <th style="width: 5%;">11</th>
-            <th style="width: 12%;">المجموع</th>
-        </tr>
-        <tr>
-            <th>تقييم الأداء الوظيفي للعنصر ( 1-5 )</th>
-            <td id="val_0"></td>
-            <td id="val_1"></td>
-            <td id="val_2"></td>
-            <td id="val_3"></td>
-            <td id="val_4"></td>
-            <td id="val_5"></td>
-            <td id="val_6"></td>
-            <td id="val_7"></td>
-            <td id="val_8"></td>
-            <td id="val_9"></td>
-            <td id="val_10"></td>
-            <td id="val_total" style="font-weight:bold; color:#135c34; font-size:14px;"></td>
-        </tr>
-        <tr>
-            <th>التقييم العام للأداء</th>
-            <td colspan="12">
-                <div style="display: flex; justify-content: space-around; align-items: center;">
-                    <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
-                        الأداء من 5: <span id="summary_avg" style="font-weight: bold; font-size: 14px;">-</span>
-                    </div>
-                    <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
-                        النسبة %: <span id="summary_percent" style="font-weight: bold; font-size: 14px;">-</span>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <th>التقدير العام</th>
-            <td colspan="2" id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز (5)</td>
-            <td colspan="3" id="scale_4"><span class="check-box" id="cb_4"></span> جيد جداً (4)</td>
-            <td colspan="2" id="scale_3"><span class="check-box" id="cb_3"></span> جيد (3)</td>
-            <td colspan="3" id="scale_2"><span class="check-box" id="cb_2"></span> مقبول (2)</td>
-            <td colspan="2" id="scale_1"><span class="check-box" id="cb_1"></span> غير مرضي (1)</td>
-        </tr>
-    </table>
-
-    <!-- ===================== التوضيحات والمعادلات ===================== -->
-    <div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: bold; font-size: 13px; color: #135c34;">
-        <span>التقدير العام للأداء (1-5) = المجموع / 11</span>
-        <span>النسبة (100%) = (المجموع / 55) * 100</span>
-    </div>
-
-    <!-- ===================== التوقيع والاعتماد ===================== -->
-    <div class="signatures">
-        <div class="sig-box">
-            <strong>اسم مدير المدرسة</strong>
-            <input type="text" class="line-input">
+            <!-- خلاصة التقييم -->
+            <table id="summaryTable" style="margin-bottom: 0;">
+                <tr>
+                    <th style="width: 25%;">رقم العنصر</th>
+                    <script>for(let i=1;i<=11;i++) document.write(`<th>${i}</th>`);</script>
+                    <th>المجموع</th>
+                </tr>
+                <tr>
+                    <th>الدرجة</th>
+                    <script>for(let i=0;i<11;i++) document.write(`<td id="val_${i}"></td>`);</script>
+                    <td id="val_total" style="font-weight:bold; color:#103b51;"></td>
+                </tr>
+                <tr>
+                    <th>التقييم العام</th>
+                    <td colspan="12">
+                        <div style="display: flex; justify-content: space-around;">
+                            <span>الأداء من 5: <b id="summary_avg">-</b></span>
+                            <span>النسبة: <b id="summary_percent">-</b></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>التقدير</th>
+                    <td colspan="3" id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز</td>
+                    <td colspan="3" id="scale_4"><span class="check-box" id="cb_4"></span> جيد جداً</td>
+                    <td colspan="3" id="scale_3"><span class="check-box" id="cb_3"></span> جيد</td>
+                    <td colspan="2" id="scale_2"><span class="check-box" id="cb_2"></span> مقبول</td>
+                    <td colspan="2" id="scale_1"><span class="check-box" id="cb_1"></span> غير مرضي</td>
+                </tr>
+            </table>
         </div>
-        <div class="sig-box">
-            <strong>التوقيع</strong>
-            <div class="line-input" style="height: 20px; border-bottom: 1px dashed #333;"></div>
+
+        <div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: bold; font-size: 14px; color: #103b51;">
+            <span>التقدير العام (1-5) = المجموع / 11</span>
+            <span>النسبة (100%) = (المجموع / 55) * 100</span>
         </div>
-        <div class="sig-box">
-            <strong>التاريخ</strong>
-            <input type="text" class="line-input" id="current_date" placeholder="يوم / شهر / سنة هـ">
+
+        <div class="signatures">
+            <div class="sig-box">
+                <strong>اسم مدير المدرسة</strong>
+                <input type="text" class="line-input">
+            </div>
+            <div class="sig-box">
+                <strong>التوقيع</strong>
+                <div class="line-input" style="height: 25px;"></div>
+            </div>
+            <div class="sig-box">
+                <strong>التاريخ</strong>
+                <input type="text" class="line-input" id="current_date">
+            </div>
         </div>
-        <div class="sig-box">
-            <strong>الختم</strong>
-            <div class="stamp-circle">مكان الختم</div>
+
+        <div class="result" id="result" style="display:none;">بانتظار إكمال التقييم...</div>
+
+        <div class="buttons">
+            <button onclick="window.print()">🖨️ طباعة النموذج</button>
         </div>
-    </div>
 
-    <!-- ===================== المربع المؤقت للنتائج ===================== -->
-    <div class="result" id="result">
-        النتيجة ستظهر هنا وتُحدث في الجدول أعلاه تلقائياً
-    </div>
+    </div> <!-- نهاية content-area -->
 
-    <div class="buttons">
-        <button onclick="window.print()">🖨️ طباعة النموذج (PDF)</button>
-    </div>
+</div> <!-- نهاية a4-wrapper -->
 
-</div> <!-- نهاية حاوية الـ A4 -->
-
-<!-- عنصر التنبيه العائم -->
 <div id="toast"></div>
 
 <script>
-    // إعداد التاريخ الهجري التلقائي للكليشة وللتوقيع
     window.addEventListener('load', function() {
-        try {
-            const today = new Date();
-            const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-            let dateStr = hijriFormatter.format(today);
-            if(!dateStr.includes('هـ')) dateStr += ' هـ';
-            
-            document.getElementById('current_date').value = dateStr;
-            document.getElementById('header_date_span').innerText = dateStr;
-        } catch (e) {
-            console.error("متصفحك قد لا يدعم التقويم الهجري تلقائياً");
-        }
+        const today = new Date();
+        const hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {day:'2-digit',month:'2-digit',year:'numeric'}).format(today);
+        document.getElementById('current_date').value = hijri;
+        document.getElementById('header_date_span').innerText = hijri;
     });
 
-    /* 🔁 الانتقال التلقائي بين مربعات السجل المدني */
     function moveNext(el, i) {
         el.value = el.value.replace(/[^0-9]/g, '');
         if (el.value.length === 1) {
@@ -539,126 +490,60 @@
         }
     }
 
-    // دالة إظهار التنبيه
-    function showToast(message) {
-        let toast = document.getElementById("toast");
-        toast.innerText = message;
-        toast.className = "show";
-        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3500);
+    function showToast(m) {
+        let t = document.getElementById("toast");
+        t.innerText = m; t.className = "show";
+        setTimeout(() => t.className = "", 3000);
     }
 
-    /* 🧮 حساب النتيجة وتعبئة جدول الخلاصة */
-    function calc(clickedIndex) {
-        // تنبيه عند تجاوز عنصر
-        if (typeof clickedIndex !== 'undefined') {
-            for (let j = 0; j < clickedIndex; j++) {
+    function calc(idx) {
+        if (idx > 0) {
+            for (let j = 0; j < idx; j++) {
                 if (!document.querySelector(`input[name="q${j}"]:checked`)) {
-                    showToast(`⚠️ تنبيه: لقد نسيت تقييم العنصر رقم ${j + 1} (${items[j][0]})`);
-                    
-                    // تظليل الصف المنسي باللون الأحمر الخفيف مؤقتاً
-                    let missedRow = document.querySelector(`#evalTable tr:nth-child(${j + 2})`);
-                    if(missedRow) {
-                        missedRow.style.transition = "background-color 0.5s";
-                        missedRow.style.backgroundColor = "#ffcccc";
-                        setTimeout(() => { missedRow.style.backgroundColor = ""; }, 2000);
-                    }
-                    break; 
+                    showToast(`تنبيه: نسيت العنصر رقم ${j + 1}`);
+                    break;
                 }
             }
         }
 
-        let count = 0;
-        let rawSum = 0; 
-
-        for (let i = 0; i < items.length; i++) {
-            let sel = document.querySelector(`input[name="q${i}"]:checked`);
-            if (sel) {
-                let val = parseInt(sel.value);
-                count++;
-                
-                document.getElementById(`val_${i}`).innerText = val;
-                rawSum += val;
-            } else {
-                document.getElementById(`val_${i}`).innerText = "";
+        let rawSum = 0, count = 0;
+        for (let i = 0; i < 11; i++) {
+            let s = document.querySelector(`input[name="q${i}"]:checked`);
+            if (s) {
+                let v = parseInt(s.value);
+                rawSum += v; count++;
+                document.getElementById(`val_${i}`).innerText = v;
             }
         }
 
         document.getElementById("val_total").innerText = count > 0 ? rawSum : "";
 
-        if (count < items.length) {
-            document.getElementById("result").innerHTML = "⚠️ يرجى إكمال تقييم جميع العناصر لمعرفة النتيجة";
-            document.getElementById("summary_avg").innerText = "-";
-            document.getElementById("summary_percent").innerText = "-";
-            
-            for(let i=1; i<=5; i++){
-                let el = document.getElementById("scale_" + i);
-                let cb = document.getElementById("cb_" + i);
-                if(el && cb) {
-                    el.style.backgroundColor = "";
-                    el.style.color = "#333";
-                    el.style.fontWeight = "normal";
-                    cb.innerText = "";
-                    cb.style.borderColor = "#777";
-                }
-            }
-            return;
-        }
+        if (count < 11) return;
 
-        // المعادلات الرياضية المطلوبة
         let avg = (rawSum / 11).toFixed(2);
         let percent = ((rawSum / 55) * 100).toFixed(2);
+        let color = "#28a745", grade = "ممتاز", activeScale = 5;
 
-        let grade = "";
-        let color = "";
-        
-        if (avg >= 4.5) { grade = "ممتاز"; color = "#28a745"; }
-        else if (avg >= 3.5) { grade = "جيد جداً"; color = "#007bff"; }
-        else if (avg >= 2.5) { grade = "جيد"; color = "#ff9800"; }
-        else if (avg >= 1.5) { grade = "مقبول"; color = "orange"; }
-        else { grade = "غير مرضي"; color = "#dc3545"; }
+        if (avg < 1.5) { color="#dc3545"; grade="غير مرضي"; activeScale=1; }
+        else if (avg < 2.5) { color="orange"; grade="مقبول"; activeScale=2; }
+        else if (avg < 3.5) { color="#ff9800"; grade="جيد"; activeScale=3; }
+        else if (avg < 4.5) { color="#007bff"; grade="جيد جداً"; activeScale=4; }
 
-        document.getElementById("result").innerHTML = `
-            <div style="display:flex; justify-content:space-around; align-items:center;">
-                <span>📊 <b>المتوسط:</b> ${avg} من 5</span>
-                <span>📈 <b>النسبة:</b> ${percent}%</span>
-                <span style="color:${color};">🏆 <b>التقدير:</b> ${grade}</span>
-            </div>
-        `;
-
-        document.getElementById("summary_avg").style.color = color;
         document.getElementById("summary_avg").innerText = avg;
-        
-        document.getElementById("summary_percent").style.color = color;
         document.getElementById("summary_percent").innerText = percent + "%";
         
-        for(let i=1; i<=5; i++){
-            let el = document.getElementById("scale_" + i);
-            let cb = document.getElementById("cb_" + i);
-            if(el && cb) {
-                el.style.backgroundColor = "";
-                el.style.color = "#333";
-                el.style.fontWeight = "normal";
-                cb.innerText = "";
-                cb.style.borderColor = "#777";
-            }
+        const resDiv = document.getElementById("result");
+        resDiv.style.display = "block";
+        resDiv.innerHTML = `<span style="color:${color}">التقدير العام: ${grade} (${percent}%)</span>`;
+
+        for(let i=1; i<=5; i++) {
+            document.getElementById("cb_"+i).innerText = "";
+            document.getElementById("scale_"+i).style.color = "#333";
+            document.getElementById("scale_"+i).style.fontWeight = "normal";
         }
-        
-        let activeScale = 1;
-        if (avg >= 4.5) activeScale = 5;
-        else if (avg >= 3.5) activeScale = 4;
-        else if (avg >= 2.5) activeScale = 3;
-        else if (avg >= 1.5) activeScale = 2;
-        else activeScale = 1;
-        
-        let activeEl = document.getElementById("scale_" + activeScale);
-        let activeCb = document.getElementById("cb_" + activeScale);
-        if(activeEl && activeCb) {
-            activeEl.style.color = color;
-            activeEl.style.fontWeight = "bold";
-            activeCb.innerText = "✔";
-            activeCb.style.color = color;
-            activeCb.style.borderColor = color;
-        }
+        document.getElementById("cb_"+activeScale).innerText = "✔";
+        document.getElementById("scale_"+activeScale).style.color = color;
+        document.getElementById("scale_"+activeScale).style.fontWeight = "bold";
     }
 </script>
 
