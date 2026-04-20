@@ -20,12 +20,30 @@
         color: #333;
     }
 
+    /* كليشة الوزارة */
+    .moe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .moe-header p {
+        margin: 3px 0;
+    }
+
+    .moe-center img {
+        height: 70px;
+    }
+
     h2 {
         text-align: center;
         font-size: 16px;
-        margin-top: 5px;
+        margin-top: 0;
         margin-bottom: 10px;
-        color: #1a5ab5;
+        color: #135c34; /* أخضر الوزارة */
     }
 
     /* إعدادات الجداول الموحدة والمضغوطة */
@@ -45,7 +63,7 @@
     }
 
     th {
-        background: #2c7be5;
+        background: #135c34; /* أخضر الوزارة */
         color: white;
         font-size: 12px;
         font-weight: bold;
@@ -79,7 +97,7 @@
     
     input[type="text"]:focus, input[type="date"]:focus, select:focus {
         outline: none;
-        border-color: #2c7be5;
+        border-color: #135c34;
     }
 
     /* مربعات السجل المدني */
@@ -109,7 +127,7 @@
     .result {
         background: white;
         padding: 10px;
-        border: 2px solid #2c7be5;
+        border: 2px solid #135c34;
         border-radius: 6px;
         font-size: 14px;
         text-align: center;
@@ -170,11 +188,15 @@
         margin: 5px;
         border: none;
         border-radius: 5px;
-        background: #2c7be5;
+        background: #135c34; /* أخضر الوزارة */
         color: white;
         font-size: 13px;
         font-family: Tahoma;
         cursor: pointer;
+    }
+
+    button:hover {
+        background: #0d4024;
     }
 
     /* تنسيق الطباعة النهائي */
@@ -191,6 +213,25 @@
 </head>
 
 <body>
+
+<!-- ===================== كليشة الوزارة ===================== -->
+<div class="moe-header">
+    <div class="moe-right" style="text-align: center; min-width: 180px;">
+        <p>المملكة العربية السعودية</p>
+        <p>وزارة التعليم</p>
+        <p>"مدرسة العزيزية الثانوية"</p>
+    </div>
+    
+    <div class="moe-center">
+        <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار وزارة التعليم">
+    </div>
+    
+    <div class="moe-left">
+        <p>الرقم: ..............................</p>
+        <p>التاريخ: <span id="header_date_span"></span></p>
+        <p>المرفقات: ..........................</p>
+    </div>
+</div>
 
 <h2>نموذج تقييم أداء المعلم</h2>
 
@@ -339,7 +380,7 @@
         <td id="val_8"></td>
         <td id="val_9"></td>
         <td id="val_10"></td>
-        <td id="val_total" style="font-weight:bold; color:#2c7be5; font-size:14px;"></td>
+        <td id="val_total" style="font-weight:bold; color:#135c34; font-size:14px;"></td>
     </tr>
     <tr>
         <th>التقييم العام للأداء</th>
@@ -394,7 +435,7 @@
 </div>
 
 <script>
-    // إعداد التاريخ الهجري التلقائي
+    // إعداد التاريخ الهجري التلقائي للكليشة وللتوقيع
     window.addEventListener('load', function() {
         try {
             const today = new Date();
@@ -405,7 +446,11 @@
             });
             let dateStr = hijriFormatter.format(today);
             if(!dateStr.includes('هـ')) dateStr += ' هـ';
+            
+            // تعيين التاريخ في قسم التوقيعات السفلي
             document.getElementById('current_date').value = dateStr;
+            // تعيين التاريخ في الكليشة العلوية
+            document.getElementById('header_date_span').innerText = dateStr;
         } catch (e) {
             console.error("متصفحك قد لا يدعم التقويم الهجري تلقائياً");
         }
@@ -464,11 +509,11 @@
         let grade = "";
         let color = "";
         
-        if (avg >= 4.5) { grade = "ممتاز"; color = "green"; }
-        else if (avg >= 3.5) { grade = "جيد جداً"; color = "blue"; }
+        if (avg >= 4.5) { grade = "ممتاز"; color = "#28a745"; }
+        else if (avg >= 3.5) { grade = "جيد جداً"; color = "#007bff"; }
         else if (avg >= 2.5) { grade = "جيد"; color = "#ff9800"; }
         else if (avg >= 1.5) { grade = "مقبول"; color = "orange"; }
-        else { grade = "غير مرضي"; color = "red"; }
+        else { grade = "غير مرضي"; color = "#dc3545"; }
 
         document.getElementById("result").innerHTML = `
             <div style="display:flex; justify-content:space-around; align-items:center;">
