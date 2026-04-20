@@ -147,6 +147,11 @@
         text-align: center;
     }
 
+    #evalTable tr.missed-row {
+        background-color: #ffe6e6; /* تظليل أحمر للعناصر المنسية */
+        transition: background-color 0.4s;
+    }
+
     #evalTable td:nth-child(2) {
         text-align: right;
         padding-right: 15px;
@@ -296,6 +301,7 @@
             -webkit-print-color-adjust: exact;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23103b51' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
         }
+        #evalTable tr.missed-row { background-color: transparent !important; }
     }
 </style>
 </head>
@@ -348,7 +354,6 @@
                         <select style="min-width: 65px;">
                             <option value="الأول">الأول</option>
                             <option value="الثاني">الثاني</option>
-                            <option value="الثالث">الثالث</option>
                         </select>
                     </td>
                     
@@ -399,16 +404,19 @@
 
             <!-- جدول عناصر التقييم -->
             <table id="evalTable">
-                <tr>
-                    <th style="width: 5%;">م</th>
-                    <th>عنصر التقييم</th>
-                    <th style="width: 10%;">الوزن النسبي</th>
-                    <th style="width: 6%;">5</th>
-                    <th style="width: 6%;">4</th>
-                    <th style="width: 6%;">3</th>
-                    <th style="width: 6%;">2</th>
-                    <th style="width: 6%;">1</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">م</th>
+                        <th>عنصر التقييم</th>
+                        <th style="width: 10%;">الوزن النسبي</th>
+                        <th style="width: 6%;">5</th>
+                        <th style="width: 6%;">4</th>
+                        <th style="width: 6%;">3</th>
+                        <th style="width: 6%;">2</th>
+                        <th style="width: 6%;">1</th>
+                    </tr>
+                </thead>
+                <tbody id="evalBody">
                 <script>
                 const items = [
                     ["أداء الواجبات والمهمات الوظيفية", 10],
@@ -424,7 +432,7 @@
                     ["التقويم المستمر للطلاب", 10]
                 ];
                 document.write(items.map((item, i) => `
-                <tr>
+                <tr id="row_${i}">
                     <td>${i+1}</td>
                     <td>${item[0]}</td>
                     <td>${item[1]}%</td>
@@ -434,6 +442,7 @@
                 </tr>
                 `).join(''));
                 </script>
+                </tbody>
             </table>
 
             <!-- خلاصة التقييم -->
@@ -511,32 +520,27 @@
 
 <script>
     window.addEventListener('load', function() {
-        // 1. تحديد التاريخ الهجري الحالي للكليشة باستخدام مكتبة Intl
+        // 1. التاريخ الهجري الرقمي للكليشة
         const today = new Date();
-        const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-uma', {
+        const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
         });
-        const hijriFull = hijriFormatter.format(today);
-        document.getElementById('header_date_span').innerText = hijriFull;
+        // إزالة أي تكرار لـ هـ وتحويل الشهور لـ أرقام
+        let hijriFull = hijriFormatter.format(today).replace(/هـ/g, '').trim();
+        document.getElementById('header_date_span').innerText = hijriFull + " هـ";
 
-        // 2. استخراج السنة الهجرية الحالية لتعيينها افتراضياً
-        const parts = hijriFull.split('/');
-        // في تنسيق ar-SA الرقم الأخير غالباً يكون السنة
-        const currentHijriYear = parseInt(parts[parts.length - 1]);
+        // 2. استخراج السنة الهجرية لتعيين العام الدراسي
+        const currentHijriYear = parseInt(hijriFull.split('/').pop());
         
         // 3. تعبئة قائمة العام الدراسي واختيار السنة الحالية آلياً
         const yearSelect = document.getElementById('academic_year_select');
-        // نطاق من 1440 إلى 1455 لتغطية سنوات قادمة
         for (let y = 1440; y <= 1455; y++) {
             const opt = document.createElement('option');
             opt.value = y;
             opt.text = y + " هـ";
-            // اختيار العام الحالي تلقائياً
-            if (y === currentHijriYear) {
-                opt.selected = true;
-            }
+            if (y === currentHijriYear) opt.selected = true;
             yearSelect.add(opt);
         }
     });
@@ -556,17 +560,27 @@
     }
 
     function calc(idx) {
-        if (idx > 0) {
-            for (let j = 0; j < idx; j++) {
-                if (!document.querySelector(`input[name="q${j}"]:checked`)) {
-                    showToast(`تنبيه: نسيت العنصر رقم ${j + 1}`);
-                    break;
+        // التحقق من العناصر المفقودة وتظليلها باللون الأحمر
+        let firstMissed = -1;
+        for (let j = 0; j < items.length; j++) {
+            let radio = document.querySelector(`input[name="q${j}"]:checked`);
+            let row = document.getElementById(`row_${j}`);
+            if (!radio) {
+                if (j < idx) { // إذا اختار عنصر حالي ونسي ما قبله
+                    row.classList.add("missed-row");
+                    if (firstMissed === -1) firstMissed = j;
                 }
+            } else {
+                row.classList.remove("missed-row");
             }
         }
 
+        if (firstMissed !== -1) {
+            showToast(`تنبيه: لقد نسيت تقييم العنصر رقم ${firstMissed + 1}`);
+        }
+
         let rawSum = 0, count = 0;
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < items.length; i++) {
             let s = document.querySelector(`input[name="q${i}"]:checked`);
             if (s) {
                 let v = parseInt(s.value);
@@ -579,7 +593,7 @@
 
         document.getElementById("val_total").innerText = count > 0 ? rawSum : "";
 
-        if (count < 11) {
+        if (count < items.length) {
             document.getElementById("summary_avg").innerText = "-";
             document.getElementById("summary_percent").innerText = "-";
             document.getElementById("result").style.display = "none";
