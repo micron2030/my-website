@@ -83,7 +83,6 @@
 
     /* تنسيقات الراديو */
     label {
-        margin-left: 10px;
         cursor: pointer;
     }
 
@@ -205,8 +204,10 @@
         
         <th style="width: 5%;">الفصل</th>
         <td style="width: 18%;">
-            <label><input type="radio" name="term"> الأول</label>
-            <label><input type="radio" name="term"> الثاني</label>
+            <div style="display: flex; justify-content: center; gap: 15px; align-items: center;">
+                <label><input type="radio" name="term"> الأول</label>
+                <label><input type="radio" name="term"> الثاني</label>
+            </div>
         </td>
         
         <th style="width: 10%;">فترة التقييم</th>
@@ -257,7 +258,7 @@
     <tr>
         <th style="width: 5%;">م</th>
         <th style="width: 35%;">عنصر التقييم</th>
-        <th style="width: 10%;">الوزن %</th>
+        <th style="width: 10%;">الوزن النسبي</th>
         <th style="width: 10%;">5</th>
         <th style="width: 10%;">4</th>
         <th style="width: 10%;">3</th>
@@ -293,7 +294,7 @@
     </script>
 </table>
 
-<!-- ===================== جدول خلاصة التقييم (الجديد) ===================== -->
+<!-- ===================== جدول خلاصة التقييم ===================== -->
 <table id="summaryTable">
     <tr>
         <th style="width: 28%;">رقم عنصر التقييم</th>
