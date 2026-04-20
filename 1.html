@@ -108,13 +108,15 @@
     }
 
     .id-box {
-        width: 20px !important;
-        height: 22px;
+        width: 25px !important; /* إرجاعها لشكل مربع */
+        height: 25px !important;
+        padding: 0 !important; /* إزالة أي تباعد داخلي يضغط الرقم */
         text-align: center !important;
-        border: 1px solid #999;
-        margin: 0 1px;
-        font-size: 13px;
-        border-radius: 2px;
+        border: 1px solid #777 !important;
+        margin: 0 2px;
+        font-size: 14px !important;
+        border-radius: 3px;
+        box-sizing: border-box !important;
     }
 
     /* تنسيقات الراديو */
@@ -177,6 +179,19 @@
         font-size: 11px;
     }
 
+    /* مربع الاختيار الخاص بالطباعة */
+    .check-box {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #777;
+        margin-left: 5px;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 14px;
+        font-size: 14px;
+    }
+
     /* أزرار */
     .buttons {
         text-align: center;
@@ -229,7 +244,7 @@
         table, .signatures { box-shadow: none; border: none; margin-bottom: 5px; }
         th { background: #e0e0e0 !important; color: black !important; -webkit-print-color-adjust: exact; }
         .buttons, .result, #toast { display: none !important; }
-        input[type="text"], input[type="date"], select, .id-box { border: 1px solid #000; }
+        input[type="text"], input[type="date"], select, .id-box { border: 1px solid #000 !important; }
         .line-input { border-bottom: 1px solid #000 !important; }
         .stamp-circle { border-color: #000; }
     }
@@ -423,11 +438,11 @@
     </tr>
     <tr>
         <th>التقدير العام</th>
-        <td colspan="2" id="scale_5">ممتاز (5)</td>
-        <td colspan="3" id="scale_4">جيد جداً (4)</td>
-        <td colspan="2" id="scale_3">جيد (3)</td>
-        <td colspan="3" id="scale_2">مقبول (2)</td>
-        <td colspan="2" id="scale_1">غير مرضي (1)</td>
+        <td colspan="2" id="scale_5"><span class="check-box" id="cb_5"></span> ممتاز (5)</td>
+        <td colspan="3" id="scale_4"><span class="check-box" id="cb_4"></span> جيد جداً (4)</td>
+        <td colspan="2" id="scale_3"><span class="check-box" id="cb_3"></span> جيد (3)</td>
+        <td colspan="3" id="scale_2"><span class="check-box" id="cb_2"></span> مقبول (2)</td>
+        <td colspan="2" id="scale_1"><span class="check-box" id="cb_1"></span> غير مرضي (1)</td>
     </tr>
 </table>
 
@@ -551,10 +566,13 @@
             
             for(let i=1; i<=5; i++){
                 let el = document.getElementById("scale_" + i);
-                if(el) {
+                let cb = document.getElementById("cb_" + i);
+                if(el && cb) {
                     el.style.backgroundColor = "";
-                    el.style.color = "";
+                    el.style.color = "#333";
                     el.style.fontWeight = "normal";
+                    cb.innerText = "";
+                    cb.style.borderColor = "#777";
                 }
             }
             return;
@@ -589,10 +607,13 @@
         
         for(let i=1; i<=5; i++){
             let el = document.getElementById("scale_" + i);
-            if(el) {
+            let cb = document.getElementById("cb_" + i);
+            if(el && cb) {
                 el.style.backgroundColor = "";
-                el.style.color = "";
+                el.style.color = "#333";
                 el.style.fontWeight = "normal";
+                cb.innerText = "";
+                cb.style.borderColor = "#777";
             }
         }
         
@@ -604,10 +625,13 @@
         else activeScale = 1;
         
         let activeEl = document.getElementById("scale_" + activeScale);
-        if(activeEl) {
-            activeEl.style.backgroundColor = color;
-            activeEl.style.color = "white";
+        let activeCb = document.getElementById("cb_" + activeScale);
+        if(activeEl && activeCb) {
+            activeEl.style.color = color;
             activeEl.style.fontWeight = "bold";
+            activeCb.innerText = "✔";
+            activeCb.style.color = color;
+            activeCb.style.borderColor = color;
         }
     }
 </script>
