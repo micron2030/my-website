@@ -148,7 +148,7 @@
     }
 
     #evalTable tr.missed-row {
-        background-color: #ffe6e6; /* تظليل أحمر للعناصر المنسية */
+        background-color: #ffe6e6; 
         transition: background-color 0.4s;
     }
 
@@ -253,7 +253,6 @@
         font-weight: 700; 
     }
 
-    /* تنسيق خاص لجدول التقدير لضمان التساوي والوضوح */
     .grade-table th {
         background: #f4f4f4;
         color: #333;
@@ -275,7 +274,7 @@
         border-radius: 6px; 
         background: #f8f9fa;
         font-size: 14px; 
-        font-weight: 400; /* الحجم المطلوب كما ذكرت */
+        font-weight: 400; 
     }
     
     #summary_avg, #summary_percent {
@@ -308,18 +307,75 @@
         font-weight: 700;
     }
 
+    /* ============================================================
+       تعديلات الطباعة لضمان الوضوح التام واللون الأسود الصريح
+       ============================================================ */
     @media print {
-        body { background: white; padding: 0; display: block; }
-        .a4-wrapper { width: 100%; box-shadow: none; padding: 0; }
-        .buttons, #toast, .result { display: none !important; }
-        .moe-header-container { margin: 10mm 15mm 5mm 15mm !important; }
-        .signatures { background: #f8fcf9 !important; -webkit-print-color-adjust: exact; }
-        select {
-            -webkit-print-color-adjust: exact;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23103b51' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+        body { 
+            background: white !important; 
+            padding: 0 !important; 
+            display: block !important; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
+        
+        /* إجبار كافة النصوص على اللون الأسود الصريح لضمان الوضوح */
+        * {
+            color: #000 !important; 
+            text-shadow: none !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .a4-wrapper { 
+            width: 100% !important; 
+            box-shadow: none !important; 
+            padding: 0 !important; 
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        .moe-header-container { 
+            margin: 10mm 15mm 5mm 15mm !important; 
+            border: 2px solid #000 !important;
+        }
+
+        /* زيادة سماكة الحدود في الطباعة لتظهر بوضوح */
+        table, th, td, .tables-frame, .signatures, .id-box, .check-box {
+            border-color: #000 !important;
+            border-width: 1.5pt !important;
+        }
+
+        /* منع المتصفح من تصغير الخط تلقائياً */
+        h2 { font-size: 18pt !important; }
+        .info-table th, .info-table td, #evalTable th, #evalTable td, #summaryTable th, #summaryTable td {
+            font-size: 11pt !important;
+        }
+        #summary_avg, #summary_percent { font-size: 16pt !important; }
+
+        .buttons, #toast, .result { display: none !important; }
+        
+        .signatures { 
+            background: #fff !important; 
+            border: 2px solid #000 !important;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            border: 1px solid #000 !important;
+        }
+        
+        input[type="text"] { border: 1px solid #000 !important; }
+
+        .summary-badge { 
+            background: #fff !important; 
+            border: 1px solid #000 !important; 
+        }
+
+        .clean-input::placeholder { color: transparent !important; }
+        
+        /* إخفاء التظليل الأحمر للمنسيات عند الطباعة */
         #evalTable tr.missed-row { background-color: transparent !important; }
-        .summary-badge { -webkit-print-color-adjust: exact; }
     }
 </style>
 </head>
@@ -554,7 +610,6 @@
         document.getElementById('header_date_span').innerText = hijriFull + " هـ";
 
         // 2. استخراج السنة الهجرية لتعيين العام الدراسي افتراضياً
-        // نستخدم RegExp لضمان الحصول على السنة المكونة من 4 أرقام
         const match = hijriFull.match(/\d{4}/);
         const currentHijriYear = match ? parseInt(match[0]) : 1447;
         
@@ -645,11 +700,11 @@
 
         for(let i=1; i<=5; i++) {
             document.getElementById("cb_"+i).innerText = "";
-            document.getElementById("scale_"+i).style.color = "#333";
+            document.getElementById("scale_"+i).style.color = "#000"; /* أسود للطباعة */
             document.getElementById("scale_"+i).style.fontWeight = "bold";
         }
         document.getElementById("cb_"+activeScale).innerText = "✔";
-        document.getElementById("scale_"+activeScale).style.color = color;
+        document.getElementById("cb_"+activeScale).style.color = "#000";
     }
 </script>
 
