@@ -6,37 +6,55 @@
 <title>نموذج تقييم أداء المعلم</title>
 
 <style>
+    /* إعدادات الطباعة لصفحة A4 */
+    @page {
+        size: A4;
+        margin: 10mm; /* هوامش ضيقة للطباعة */
+    }
+
     body {
         font-family: Tahoma, Arial, sans-serif;
         background: #eef2f7;
-        padding: 15px;
-        font-size: 14px;
+        padding: 5px;
+        font-size: 13px; /* تصغير الخط العام */
         color: #333;
     }
 
-    /* إعدادات الجداول الموحدة */
+    h2 {
+        text-align: center;
+        font-size: 16px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        color: #1a5ab5;
+    }
+
+    /* إعدادات الجداول الموحدة والمضغوطة */
     table {
         width: 100%;
         border-collapse: collapse;
         background: white;
-        margin-bottom: 15px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 8px; /* تقليل المسافة بين الجداول */
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
 
     th, td {
         border: 1px solid #c0c9d8;
-        padding: 8px;
+        padding: 4px; /* تقليل الحشو الداخلي للخلايا */
         vertical-align: middle;
-        line-height: 1.4;
+        line-height: 1.2; /* تقليل ارتفاع السطر */
     }
 
     th {
         background: #2c7be5;
         color: white;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
-        text-align: right; /* محاذاة العناوين لليمين */
+        text-align: right; 
         white-space: nowrap;
+    }
+
+    td {
+        font-size: 12px;
     }
 
     /* استثناءات لمحاذاة النصوص في المنتصف */
@@ -45,14 +63,14 @@
     }
     #evalTable td:nth-child(2), #summaryTable th:first-child {
         text-align: right;
-        padding-right: 15px;
+        padding-right: 10px;
     }
 
     /* إدخالات النصوص والتواريخ والقوائم */
     input[type="text"], input[type="date"], select {
         width: 100%;
-        padding: 5px;
-        font-size: 13px;
+        padding: 3px; /* تصغير الحشو */
+        font-size: 12px;
         border: 1px solid #ccc;
         border-radius: 3px;
         box-sizing: border-box;
@@ -64,56 +82,57 @@
         border-color: #2c7be5;
     }
 
-    /* مربعات السجل المدني (تنسيق من اليسار لليمين للأرقام) */
+    /* مربعات السجل المدني */
     .id-container {
         display: flex; 
         justify-content: flex-start; 
-        direction: ltr; /* مهم جداً لكتابة الأرقام بشكل صحيح */
+        direction: ltr; 
     }
 
     .id-box {
-        width: 22px !important;
-        height: 25px;
+        width: 20px !important;
+        height: 22px;
         text-align: center !important;
         border: 1px solid #999;
-        margin: 0 2px;
-        font-size: 14px;
-        border-radius: 3px;
+        margin: 0 1px;
+        font-size: 13px;
+        border-radius: 2px;
     }
 
     /* تنسيقات الراديو */
     label {
-        margin-left: 10px;
         cursor: pointer;
+        font-size: 12px;
     }
 
     /* النتائج */
     .result {
         background: white;
-        padding: 15px;
+        padding: 10px;
         border: 2px solid #2c7be5;
-        border-radius: 8px;
-        font-size: 15px;
+        border-radius: 6px;
+        font-size: 14px;
         text-align: center;
         font-weight: bold;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 10px;
     }
 
-    /* قسم التوقيعات */
+    /* قسم التوقيعات مصغر */
     .signatures {
         display: flex;
         justify-content: space-between;
-        margin-top: 30px;
+        margin-top: 10px;
         text-align: center;
         background: white;
-        padding: 20px;
-        border-radius: 8px;
+        padding: 10px;
+        border-radius: 6px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .sig-box {
-        width: 22%;
+        width: 23%;
+        font-size: 12px;
     }
 
     .line-input {
@@ -124,49 +143,44 @@
         background: transparent !important;
         border-radius: 0 !important;
         text-align: center;
-        margin-top: 15px;
+        margin-top: 10px;
     }
 
     .stamp-circle {
-        width: 80px;
-        height: 80px;
+        width: 60px; /* تصغير دائرة الختم */
+        height: 60px;
         border: 2px dashed #999;
         border-radius: 50%;
-        margin: 10px auto 0 auto;
+        margin: 5px auto 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #999;
-        font-size: 12px;
+        font-size: 11px;
     }
 
     /* أزرار */
     .buttons {
         text-align: center;
-        margin-top: 15px;
+        margin-top: 10px;
     }
 
     button {
-        padding: 10px 20px;
+        padding: 8px 15px;
         margin: 5px;
         border: none;
-        border-radius: 6px;
+        border-radius: 5px;
         background: #2c7be5;
         color: white;
-        font-size: 14px;
+        font-size: 13px;
         font-family: Tahoma;
         cursor: pointer;
-        transition: background 0.3s;
     }
 
-    button:hover {
-        background: #1a5ab5;
-    }
-
-    /* تنسيق الطباعة */
+    /* تنسيق الطباعة النهائي */
     @media print {
-        body { background: white; zoom: 0.90; padding: 0; }
-        table, .signatures { box-shadow: none; border: none; margin-bottom: 10px; }
+        body { background: white; padding: 0; }
+        table, .signatures { box-shadow: none; border: none; margin-bottom: 5px; }
         th { background: #e0e0e0 !important; color: black !important; -webkit-print-color-adjust: exact; }
         .buttons, .result { display: none; }
         input[type="text"], input[type="date"], select, .id-box { border: 1px solid #000; }
@@ -178,7 +192,7 @@
 
 <body>
 
-<h2 style="text-align:center; font-size:18px; margin-bottom: 20px; color: #1a5ab5;">نموذج تقييم أداء المعلم</h2>
+<h2>نموذج تقييم أداء المعلم</h2>
 
 <!-- ===================== بيانات التقييم ===================== -->
 <table>
@@ -205,8 +219,10 @@
         
         <th style="width: 5%;">الفصل</th>
         <td style="width: 18%;">
-            <label><input type="radio" name="term"> الأول</label>
-            <label><input type="radio" name="term"> الثاني</label>
+            <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+                <label><input type="radio" name="term"> الأول</label>
+                <label><input type="radio" name="term"> الثاني</label>
+            </div>
         </td>
         
         <th style="width: 10%;">فترة التقييم</th>
@@ -257,7 +273,7 @@
     <tr>
         <th style="width: 5%;">م</th>
         <th style="width: 35%;">عنصر التقييم</th>
-        <th style="width: 10%;">الوزن %</th>
+        <th style="width: 10%;">الوزن النسبي</th>
         <th style="width: 10%;">5</th>
         <th style="width: 10%;">4</th>
         <th style="width: 10%;">3</th>
@@ -293,7 +309,7 @@
     </script>
 </table>
 
-<!-- ===================== جدول خلاصة التقييم (الجديد) ===================== -->
+<!-- ===================== جدول خلاصة التقييم ===================== -->
 <table id="summaryTable">
     <tr>
         <th style="width: 28%;">رقم عنصر التقييم</th>
@@ -311,7 +327,7 @@
         <th style="width: 12%;">المجموع</th>
     </tr>
     <tr>
-        <th>تقييم الأداء الوظيفي للعنصر ( من 1 إلى 5 )</th>
+        <th>تقييم الأداء الوظيفي للعنصر ( 1-5 )</th>
         <td id="val_0"></td>
         <td id="val_1"></td>
         <td id="val_2"></td>
@@ -323,17 +339,17 @@
         <td id="val_8"></td>
         <td id="val_9"></td>
         <td id="val_10"></td>
-        <td id="val_total" style="font-weight:bold; color:#2c7be5; font-size:15px;"></td>
+        <td id="val_total" style="font-weight:bold; color:#2c7be5; font-size:14px;"></td>
     </tr>
     <tr>
         <th>التقييم العام للأداء</th>
         <td colspan="12">
             <div style="display: flex; justify-content: space-around; align-items: center;">
-                <div style="border: 1px solid #ccc; padding: 5px 20px; border-radius: 4px; background: #f8f9fa;">
-                    الأداء من 5: <span id="summary_avg" style="font-weight: bold; font-size: 15px;">-</span>
+                <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
+                    الأداء من 5: <span id="summary_avg" style="font-weight: bold; font-size: 14px;">-</span>
                 </div>
-                <div style="border: 1px solid #ccc; padding: 5px 20px; border-radius: 4px; background: #f8f9fa;">
-                    النسبة %: <span id="summary_percent" style="font-weight: bold; font-size: 15px;">-</span>
+                <div style="border: 1px solid #ccc; padding: 3px 15px; border-radius: 4px; background: #f8f9fa;">
+                    النسبة %: <span id="summary_percent" style="font-weight: bold; font-size: 14px;">-</span>
                 </div>
             </div>
         </td>
@@ -356,7 +372,7 @@
     </div>
     <div class="sig-box">
         <strong>التوقيع</strong>
-        <div class="line-input" style="height: 25px; border-bottom: 1px dashed #333;"></div>
+        <div class="line-input" style="height: 20px; border-bottom: 1px dashed #333;"></div>
     </div>
     <div class="sig-box">
         <strong>التاريخ</strong>
@@ -369,7 +385,7 @@
 </div>
 
 <!-- ===================== المربع المؤقت للنتائج ===================== -->
-<div class="result" id="result" style="margin-top: 15px;">
+<div class="result" id="result">
     النتيجة ستظهر هنا وتُحدث في الجدول أعلاه تلقائياً
 </div>
 
@@ -407,7 +423,7 @@
     /* 🧮 حساب النتيجة وتعبئة جدول الخلاصة */
     function calc() {
         let sum = 0, weight = 0, count = 0;
-        let rawSum = 0; // لحساب المجموع المباشر للدرجات (من 1 إلى 5)
+        let rawSum = 0; 
 
         for (let i = 0; i < items.length; i++) {
             let sel = document.querySelector(`input[name="q${i}"]:checked`);
@@ -417,7 +433,6 @@
                 weight += items[i][1];
                 count++;
                 
-                // تعبئة الجدول السفلي بالدرجة المحددة
                 document.getElementById(`val_${i}`).innerText = val;
                 rawSum += val;
             } else {
@@ -425,14 +440,13 @@
             }
         }
 
-        // تحديث المجموع
         document.getElementById("val_total").innerText = count > 0 ? rawSum : "";
 
         if (count < items.length) {
             document.getElementById("result").innerHTML = "⚠️ يرجى إكمال تقييم جميع العناصر لمعرفة النتيجة";
             document.getElementById("summary_avg").innerText = "-";
             document.getElementById("summary_percent").innerText = "-";
-            // تصفير ألوان خلايا التقدير العام عند عدم اكتمال التقييم
+            
             for(let i=1; i<=5; i++){
                 let el = document.getElementById("scale_" + i);
                 if(el) {
@@ -456,7 +470,6 @@
         else if (avg >= 1.5) { grade = "مقبول"; color = "orange"; }
         else { grade = "غير مرضي"; color = "red"; }
 
-        // التحديث في المربع العائم (يتم إخفاؤه عند الطباعة)
         document.getElementById("result").innerHTML = `
             <div style="display:flex; justify-content:space-around; align-items:center;">
                 <span>📊 <b>المتوسط:</b> ${avg} من 5</span>
@@ -465,14 +478,12 @@
             </div>
         `;
 
-        // التحديث في جدول الخلاصة (يظهر في الطباعة)
         document.getElementById("summary_avg").style.color = color;
         document.getElementById("summary_avg").innerText = avg;
         
         document.getElementById("summary_percent").style.color = color;
         document.getElementById("summary_percent").innerText = percent + "%";
         
-        // تصفير ألوان خلايا التقدير العام
         for(let i=1; i<=5; i++){
             let el = document.getElementById("scale_" + i);
             if(el) {
@@ -482,7 +493,6 @@
             }
         }
         
-        // تظليل التقدير المستحق في الجدول
         let activeScale = 1;
         if (avg >= 4.5) activeScale = 5;
         else if (avg >= 3.5) activeScale = 4;
