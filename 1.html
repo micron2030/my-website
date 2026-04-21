@@ -56,11 +56,14 @@
     .moe-header p { margin: 2px 0; }
 
     /* توزيع مساحات الكليشة لدفع النصوص للأطراف */
-    .moe-right { text-align: center; width: 33%; padding-right: 15px; }
-    .moe-center { display: flex; justify-content: center; width: 34%; }
-    .moe-left { text-align: right; width: 33%; padding-right: 40px; }
-
+    .moe-right { display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+    .moe-right-content { text-align: center; min-width: 160px; }
+    
+    .moe-center { display: flex; justify-content: center; flex: 1; }
     .moe-center img { height: 75px; width: auto; }
+    
+    .moe-left { display: flex; flex-direction: column; align-items: flex-end; flex: 1; }
+    .moe-left-content { text-align: right; min-width: 120px; }
     
     /* حقل اسم المدرسة */
     .school-name-input {
@@ -209,17 +212,21 @@
     <div class="moe-header-container">
         <div class="moe-header">
             <div class="moe-right">
-                <p>المملكة العربية السعودية</p>
-                <p>وزارة التعليم</p>
-                <input type="text" class="school-name-input" placeholder="اكتب اسم المدرسة هنا">
+                <div class="moe-right-content">
+                    <p>المملكة العربية السعودية</p>
+                    <p>وزارة التعليم</p>
+                    <input type="text" class="school-name-input" placeholder="اكتب اسم المدرسة هنا">
+                </div>
             </div>
             <div class="moe-center">
                 <img src="https://upload.wikimedia.org/wikipedia/ar/1/17/Saudi_Ministry_of_Education_Logo_2025.png" alt="شعار الوزارة">
             </div>
             <div class="moe-left">
-                <p>الرقم: 000</p>
-                <p>التاريخ: <span id="header_date_span"></span></p>
-                <p>المرفقات: 0</p>
+                <div class="moe-left-content">
+                    <p>الرقم:</p>
+                    <p>التاريخ: <span id="header_date_span"></span></p>
+                    <p>المرفقات:</p>
+                </div>
             </div>
         </div>
     </div>
