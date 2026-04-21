@@ -70,7 +70,7 @@
         border: none;
         background: transparent;
         text-align: center;
-        font-size: 13px;
+        font-size: 15px; /* تم تكبير الخط */
         font-weight: 700;
         color: #374151;
         padding: 0;
@@ -121,15 +121,17 @@
         width: 100%; padding: 4px; border: 1px solid #d1d5db;
         border-radius: 4px; box-sizing: border-box;
         font-family: 'Tajawal', sans-serif; font-weight: 700;
-        font-size: 11px; outline: none; background: #fff;
+        font-size: 13px; /* تم تكبير الخط ليكون مقروءاً */
+        outline: none; background: #fff;
     }
 
     /* السجل المدني */
     .id-container { display: flex; direction: ltr; justify-content: center; }
     .id-box {
-        width: 19px !important; height: 22px !important;
+        width: 20px !important; height: 24px !important; /* تكبير طفيف للمربع */
         text-align: center !important; border: 1px solid #9ca3af !important;
-        margin: 0 1px; font-size: 12px !important; border-radius: 4px;
+        margin: 0 1px; font-size: 14px !important; /* تكبير خط الأرقام */
+        border-radius: 4px;
     }
 
     /* التوقيعات */
@@ -140,6 +142,20 @@
     }
 
     .sig-box { width: 30%; text-align: center; font-size: 13px; font-weight: 700; }
+    
+    .clean-input {
+        border: none !important;
+        background: transparent !important;
+        text-align: center;
+        margin-top: 10px;
+        font-family: 'Tajawal', sans-serif;
+        font-weight: bold;
+        width: 100%;
+        outline: none;
+        font-size: 15px; /* تم تكبير خط التوقيعات */
+    }
+    .clean-input::placeholder { color: #9ca3af; font-size: 12px; font-weight: normal; }
+
     .space-area { height: 45px; margin-top: 5px; } /* تصغير الارتفاع لتتسع الصفحة */
 
     .summary-badge {
@@ -188,7 +204,7 @@
     }
 
     /* ============================================================
-       إعدادات الطباعة - وضوح الرمادي
+       إعدادات الطباعة - وضوح الرمادي وتكبير النصوص المكتوبة
        ============================================================ */
     @media print {
         body { background: white !important; padding: 0 !important; }
@@ -198,8 +214,16 @@
         th { background-color: #f4f4f4 !important; border: 0.5pt solid #ccc !important; }
         .tables-frame { border: 1pt solid #ccc !important; border-radius: 0; } 
         .buttons, #toast, .result { display: none !important; }
-        .school-name-input::placeholder { color: transparent !important; }
+        
+        /* إخفاء التلميحات في الطباعة */
+        .school-name-input::placeholder, .clean-input::placeholder { color: transparent !important; }
         .missed-row td { background-color: transparent !important; border-color: #ccc !important; }
+
+        /* تكبير الخطوط المكتوبة خصيصاً للطباعة لتكون مقروءة بوضوح */
+        input[type="text"], select { font-size: 12pt !important; }
+        .school-name-input { font-size: 14pt !important; }
+        .id-box { font-size: 13pt !important; }
+        .clean-input { font-size: 14pt !important; }
     }
 </style>
 </head>
@@ -252,8 +276,8 @@
                     <th style="width: 12%;">فترة التقييم</th>
                     <td style="width: 25%;">
                         <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                            <span>من</span><input type="text" style="width:65px; font-size:10px;" placeholder=".. / .. / ..">
-                            <span>إلى</span><input type="text" style="width:65px; font-size:10px;" placeholder=".. / .. / ..">
+                            <span>من</span><input type="text" style="width:65px; font-size:12px; text-align:center;" placeholder=".. / .. / ..">
+                            <span>إلى</span><input type="text" style="width:65px; font-size:12px; text-align:center;" placeholder=".. / .. / ..">
                         </div>
                     </td>
                 </tr>
@@ -350,7 +374,7 @@
 
         <!-- التوقيعات -->
         <div class="signatures">
-            <div class="sig-box"><strong>اسم مدير المدرسة</strong><div class="space-area"><input type="text" class="school-name-input" placeholder="الاسم هنا" style="margin-top: 15px;"></div></div>
+            <div class="sig-box"><strong>اسم مدير المدرسة</strong><div class="space-area"><input type="text" class="clean-input" placeholder="الاسم هنا" style="margin-top: 15px;"></div></div>
             <div class="sig-box"><strong>التوقيع</strong><div class="space-area"></div></div>
             <div class="sig-box"><strong>الختم الرسمي</strong><div class="space-area"></div></div>
         </div>
