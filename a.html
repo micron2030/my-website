@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استطلاع أفضل أداة ذكاء اصطناعي</title>
+
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=tbuVhDYev9c_V24nWFQditoDVABGaYQq5OKtOCh6UmYWmrQGSVHzjcsu22UgkOF8AB9H6HuWq18ErB_G8wS6BsmFNU1Sm7pp1lulL6z0A5zVg4RQAwH42_do7dAUzPn9oK0LxC6LFhPkbfllaEvqUUBr8_UNZ4E7k6DA_EmsVdiCZglWGfWlT8RKsNB5DNpbLQMggsYhzJPSWS6SLCPjCMsx694a-uDJ6kQM6mERsUrl4sJAtkW-dKynuL6IXNw1AYjHJ5c745VVRFopohaoVQ" charset="UTF-8"></script><style>
+* {
+    box-sizing: border-box;
+    font-family: "Tajawal", sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg,#6a11cb,#2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Glass Card */
+.container {
+    width: 95%;
+    max-width: 420px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #ddd;
+}
+
+.options {
+    margin-top: 10px;
+}
+
+.card {
+    padding: 12px;
+    border-radius: 12px;
+    margin: 8px 0;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.card:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.card.active {
+    border: 2px solid #fff;
+    background: rgba(255,255,255,0.35);
+}
+
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    color: #2575fc;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+#successMsg {
+    display:none;
+    text-align:center;
+    margin-top:15px;
+    background: rgba(0,255,100,0.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>🤖 استطلاع الذكاء الاصطناعي</h1>
+
+<form id="form"
+action="https://docs.google.com/forms/d/e/1FAIpQLSdBei0Xe3RVBeJejJ1kvGxI9oO8UlHOYFqLQOmAGwjcqvwNFQ/formResponse"
+method="POST" target="hidden_iframe">
+
+<label>الاسم *</label>
+<input type="text" name="entry.1289348709" placeholder="اكتب اسمك..." required>
+
+<label>أفضل أداة ذكاء اصطناعي *</label>
+
+<div class="options">
+
+<div class="card" onclick="selectOption(this,'شات جي بي تي')">💬 شات جي بي تي</div>
+<div class="card" onclick="selectOption(this,'جيمناي')">✨ جيمناي</div>
+<div class="card" onclick="selectOption(this,'ديب سيك')">🧠 ديب سيك</div>
+
+</div>
+
+<input type="hidden" name="entry.980081856" id="toolInput">
+
+<label>سبب الاختيار *</label>
+<textarea name="entry.350884855" placeholder="اكتب السبب..." required></textarea>
+
+<button type="submit">إرسال</button>
+
+</form>
+
+<div id="successMsg">✅ تم إرسال إجابتك بنجاح</div>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
+</div>
+
+<script>
+
+function selectOption(el, value){
+    document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById("toolInput").value = value;
+}
+
+document.getElementById("form").addEventListener("submit", function(e){
+    if(!document.getElementById("toolInput").value){
+        e.preventDefault();
+        alert("اختر الأداة أولاً");
+        return;
+    }
+
+    setTimeout(()=>{
+        document.getElementById("successMsg").style.display="block";
+        document.getElementById("form").reset();
+        document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
+    },500);
+});
+
+</script>
+
+</body>
+</html>
